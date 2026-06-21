@@ -41,10 +41,10 @@ class NakamaService {
       if (typeof window !== 'undefined' && this.session) {
         localStorage.setItem('nakama_session', JSON.stringify({
           token: this.session.token,
-          refreshToken: this.session.refreshToken,
-          userId: this.session.userId,
+          refreshToken: this.session.refresh_token,  // Note: refresh_token with underscore
+          userId: this.session.user_id,  // Note: user_id with underscore
           username: this.session.username,
-          expiresAt: this.session.expiresAt
+          expiresAt: this.session.expires_at  // Note: expires_at with underscore
         }));
       }
       
@@ -99,7 +99,7 @@ class NakamaService {
         leaderboardId,
         '',
         1,
-        [this.session.userId]
+        [this.session.user_id]  // Note: user_id with underscore
       );
       
       if (result.records && result.records.length > 0) {
