@@ -106,12 +106,15 @@ class NakamaService {
 
   async getUserRank(leaderboardId: string): Promise<{ rank: number; score: number } | null> {
     if (!this.session) throw new Error('Not authenticated');
+    const session = this.session;
+
+    if (!session.user_id) throw new Error('Session is missing user_id');
 
     try {
       const result = await this.client.listLeaderboardRecords(
-        this.session,
+        session,
         leaderboardId,
-        [this.session.user_id],  // ownerIds as string array
+        [session.user_id],  // ownerIds as string array
         1,
         ''
       );
