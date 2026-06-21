@@ -1,4 +1,4 @@
-﻿// src/components/profile/ProfileHeader.tsx
+// src/components/profile/ProfileHeader.tsx
 'use client';
 
 import React from 'react';
@@ -33,7 +33,7 @@ export const ProfileHeader = ({
 
   return (
     <Card className="relative overflow-hidden">
-      <div className={cn('absolute inset-0 bg-gradient-to-r', theme.mode === 'dark' ? 'from-amber-500/20 to-purple-600/20' : 'from-amber-500/10 to-purple-600/10')} />
+      <div className={cn('absolute inset-0 bg-gradient-to-r', theme.bg === 'bg-zinc-900' ? 'from-amber-500/20 to-purple-600/20' : 'from-amber-500/10 to-purple-600/10')} />
       <div className="relative z-10 p-6">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-400 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
@@ -53,7 +53,7 @@ export const ProfileHeader = ({
               <p className={cn('text-xs', theme.textSecondary)}>Points</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold flex items-center justify-center gap-1">{streak} ðŸ”¥</p>
+              <p className="text-2xl font-bold flex items-center justify-center gap-1">{streak} 🔥</p>
               <p className={cn('text-xs', theme.textSecondary)}>Streak</p>
             </div>
           </div>
@@ -67,3 +67,4 @@ export const ProfileHeader = ({
     </Card>
   );
 };
+

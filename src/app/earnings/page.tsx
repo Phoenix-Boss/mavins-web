@@ -1,4 +1,4 @@
-﻿// src/app/earnings/page.tsx
+// src/app/earnings/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -6,7 +6,7 @@ import { Container } from '@/components/ui/Container';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
-import { EarningsSummary } from '@/components/earnings/EarningsSummary';
+import { EarnCard } from '@/components/earnings/EarningsSummary';
 import { PointsHistory, HistoryEntry } from '@/components/earnings/PointsHistory';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAppStore } from '@/store/useAppStore';

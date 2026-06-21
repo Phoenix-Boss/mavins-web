@@ -43,8 +43,8 @@ export const SongListItem = ({
       onClick={onClick}
       className={cn(
         'flex items-center gap-4 p-3 rounded-xl transition-all duration-200 cursor-pointer group',
-        theme.mode === 'dark' ? 'hover:bg-white/10' : 'hover:bg-purple-50',
-        isPlaying && (theme.mode === 'dark' ? 'bg-purple-500/20' : 'bg-purple-100/50')
+        theme.bg === 'bg-zinc-900' ? 'hover:bg-white/10' : 'hover:bg-purple-50',
+        isPlaying && (theme.bg === 'bg-zinc-900' ? 'bg-purple-500/20' : 'bg-purple-100/50')
       )}
     >
       <span className={cn(
@@ -82,7 +82,7 @@ export const SongListItem = ({
         <span className={cn('text-xs', theme.textSecondary)}>{formatDuration(duration)}</span>
         <div className={cn(
           'w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200',
-          theme.mode === 'dark' ? 'bg-white/10 group-hover:bg-purple-500' : 'bg-purple-100 group-hover:bg-purple-500',
+          theme.bg === 'bg-zinc-900' ? 'bg-white/10 group-hover:bg-purple-500' : 'bg-purple-100 group-hover:bg-purple-500',
           'opacity-0 group-hover:opacity-100'
         )}>
           <span className="text-xs text-purple-400 group-hover:text-white">▶</span>
