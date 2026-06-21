@@ -31,6 +31,7 @@ class NakamaService {
       console.log('🔐 Authenticating with Nakama...', { userId, username });
       
       // Try authentication with custom ID
+      // The third parameter is create (boolean) - true to create account if it doesn't exist
       this.session = await this.client.authenticateCustom(userId, username || userId, true);
       
       // Store session
@@ -87,7 +88,7 @@ class NakamaService {
   }
 
   async getUserRank(leaderboardId: string): Promise<{ rank: number; score: number } | null> {
-    if (!this.session) throw new Error('Not authenticated');
+    if (!this.session) throw new error('Not authenticated');
     
     try {
       const result = await this.client.listLeaderboardRecords(
