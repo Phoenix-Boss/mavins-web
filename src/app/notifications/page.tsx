@@ -1,7 +1,8 @@
 "use client";
 
-import { useTheme } from '../../../components/theme-provider';
-import { notifications, Notification } from '../../../lib/dummy-data';
+import { useState } from 'react';
+import { useTheme } from '@/components/providers/ThemeProvider';
+import { notifications, Notification } from '@/app/lib/dummy-data';
 
 export default function NotificationsPage() {
   const { theme } = useTheme();
@@ -109,5 +110,3 @@ export default function NotificationsPage() {
     </div>
   );
 }
-
-import { useState } from 'react';

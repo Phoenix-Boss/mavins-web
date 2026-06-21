@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useTheme } from '../components/theme-provider';
-import { curatorRequests, CuratorRequest } from '../lib/dummy-data';
+import { useTheme } from '@/components/providers/ThemeProvider';
+import { curatorRequests, CuratorRequest } from '@/app/lib/dummy-data';
 
 export default function CuratorPage() {
   const { theme } = useTheme();

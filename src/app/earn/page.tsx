@@ -1,26 +1,40 @@
 "use client";
 
 import { useState } from 'react';
-import { useTheme } from '../components/theme-provider';
-import { curatorRequests, CuratorRequest } from '../lib/dummy-data';
+import { useTheme } from '@/components/providers/ThemeProvider';
+import { dailyTasks, earningRules, currentUser } from '@/app/lib/dummy-data';
 
-export default function CuratorPage() {
+export default function EarnPage() {
   const { theme } = useTheme();
-  const [requests, setRequests] = useState(curatorRequests);
-  const [filter, setFilter] = useState<'all' | 'pending' | 'reviewed'>('all');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'history' | 'rules'>('tasks');
+  const [points, setPoints] = useState(currentUser.balance);
+  const [streak, setStreak] = useState(currentUser.streak);
+  const [completedTasks, setCompletedTasks] = useState<number[]>(
+    dailyTasks.filter(task => task.completed).map(task => task.id)
+  );
 
-  const handleReview = (id: number, action: 'accept' | 'reject') => {
-    setRequests(prev => prev.map(req => 
-      req.id === id ? { ...req, status: action === 'accept' ? 'accepted' : 'rejected' } : req
-    ));
+  const handleCompleteTask = (taskId: number, reward: number) => {
+    if (!completedTasks.includes(taskId)) {
+      setCompletedTasks([...completedTasks, taskId]);
+      setPoints(points + reward);
+    }
   };
 
-  const filteredRequests = requests.filter(req => {
-    if (filter === 'all') return true;
-    if (filter === 'pending') return req.status === 'pending';
-    if (filter === 'reviewed') return req.status !== 'pending';
-    return true;
-  });
+  const getTaskStatus = (taskId: number) => {
+    if (completedTasks.includes(taskId)) return 'completed';
+    return 'pending';
+  };
+
+  // Calculate total points earned today from completed tasks
+  const todayEarnings = dailyTasks
+    .filter(task => completedTasks.includes(task.id))
+    .reduce((sum, task) => sum + task.reward, 0);
+
+  // Calculate weekly earnings (approximate)
+  const weeklyEarnings = Math.round(todayEarnings * 3.5);
+
+  // Calculate next reward threshold
+  const nextReward = 5000 - points;
 
   return (
     <div className={`flex-1 ${theme.bg} ${theme.text} overflow-y-auto pb-24 md:pb-20 p-4 md:p-6`}>
@@ -28,164 +42,241 @@ export default function CuratorPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">🎧 Curator Center</h1>
-            <p className={`${theme.textSecondary} mt-1`}>Review tracks and earn rewards</p>
+            <h1 className="text-2xl md:text-3xl font-bold">💰 Earn Points</h1>
+            <p className={`${theme.textSecondary} mt-1`}>Complete tasks and earn rewards</p>
           </div>
-          <div className={`flex items-center gap-3 px-4 py-2 rounded-xl ${theme.bgTertiary}`}>
-            <span className="text-2xl">⭐</span>
-            <div>
-              <p className={`text-xs ${theme.textSecondary}`}>Curator Rating</p>
-              <p className="font-bold">4.8/5.0</p>
+          <div className={`flex items-center gap-4 px-4 py-2 rounded-xl ${theme.bgCard} ${theme.border} border`}>
+            <div className="text-center">
+              <p className={`text-xs ${theme.textSecondary}`}>Your Points</p>
+              <p className="text-2xl font-bold text-amber-400">{points.toLocaleString()}</p>
+            </div>
+            <div className="w-px h-10 bg-zinc-700"></div>
+            <div className="text-center">
+              <p className={`text-xs ${theme.textSecondary}`}>Day Streak</p>
+              <p className="text-2xl font-bold text-emerald-400">🔥 {streak}</p>
             </div>
           </div>
         </div>
 
-        {/* Curator Stats */}
+        {/* Earning Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           <div className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border`}>
-            <p className={`text-sm ${theme.textSecondary}`}>Reviews Today</p>
-            <p className="text-2xl font-bold mt-1">7/10</p>
+            <p className={`text-sm ${theme.textSecondary}`}>Today's Earnings</p>
+            <p className="text-xl font-bold mt-1 text-emerald-400">+{todayEarnings} pts</p>
           </div>
           <div className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border`}>
-            <p className={`text-sm ${theme.textSecondary}`}>Points Earned</p>
-            <p className="text-2xl font-bold mt-1">+175</p>
+            <p className={`text-sm ${theme.textSecondary}`}>This Week</p>
+            <p className="text-xl font-bold mt-1 text-emerald-400">+{weeklyEarnings} pts</p>
           </div>
           <div className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border`}>
-            <p className={`text-sm ${theme.textSecondary}`}>Acceptance Rate</p>
-            <p className="text-2xl font-bold mt-1">68%</p>
+            <p className={`text-sm ${theme.textSecondary}`}>Tasks Completed</p>
+            <p className="text-xl font-bold mt-1">{completedTasks.length}/{dailyTasks.length}</p>
           </div>
           <div className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border`}>
-            <p className={`text-sm ${theme.textSecondary}`}>Playlists Managed</p>
-            <p className="text-2xl font-bold mt-1">3</p>
+            <p className={`text-sm ${theme.textSecondary}`}>Next Reward</p>
+            <p className="text-xl font-bold mt-1 text-amber-400">{nextReward > 0 ? nextReward : 'Maxed!'} pts</p>
           </div>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {(['all', 'pending', 'reviewed'] as const).map((f) => (
+        {/* Tabs */}
+        <div className="flex gap-2 overflow-x-auto pb-2 border-b border-zinc-800">
+          {(['tasks', 'history', 'rules'] as const).map((tab) => (
             <button
-              key={f}
-              onClick={() => setFilter(f)}
+              key={tab}
+              onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                filter === f 
+                activeTab === tab 
                   ? `${theme.accentBg} text-white` 
                   : `${theme.bgCard} ${theme.text} hover:${theme.cardHover}`
               }`}
             >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-              {f === 'pending' && <span className="ml-1 px-1.5 py-0.5 text-xs bg-red-500 rounded-full">{requests.filter(r => r.status === 'pending').length}</span>}
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </div>
 
-        {/* Review Requests */}
-        <section>
-          <h2 className="text-xl font-bold mb-4">📬 Track Submissions</h2>
-          <div className="space-y-4">
-            {filteredRequests.length === 0 ? (
-              <div className={`p-8 text-center rounded-2xl ${theme.bgCard} ${theme.border} border ${theme.textSecondary}`}>
-                <p className="text-lg">🎉 All caught up!</p>
-                <p className="mt-1">No pending submissions. Check back later.</p>
-              </div>
-            ) : (
-              filteredRequests.map((req) => (
-                <div key={req.id} className={`p-4 md:p-5 rounded-2xl ${theme.bgCard} ${theme.border} border`}>
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    {/* Track Info */}
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                        <img src={req.track.cover} alt={req.track.title} className="w-full h-full object-cover" />
+        {/* Tasks Tab */}
+        {activeTab === 'tasks' && (
+          <section>
+            <h2 className="text-xl font-bold mb-4">📋 Daily Tasks</h2>
+            <div className="space-y-4">
+              {dailyTasks.map((task) => {
+                const status = getTaskStatus(task.id);
+                const progressPercent = Math.round((task.progress / task.max) * 100);
+                const isCompleted = status === 'completed';
+                
+                return (
+                  <div
+                    key={task.id}
+                    className={`p-4 md:p-5 rounded-2xl ${theme.bgCard} ${theme.border} border ${
+                      isCompleted ? 'opacity-60' : ''
+                    }`}
+                  >
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-xl ${theme.bgTertiary} flex items-center justify-center text-2xl flex-shrink-0`}>
+                            {task.type === 'daily' && '📅'}
+                            {task.type === 'weekly' && '📊'}
+                            {task.type === 'streak' && '🔥'}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{task.title}</p>
+                              <span className={`text-xs px-2 py-0.5 rounded-full ${theme.bgTertiary} ${theme.textSecondary}`}>
+                                {task.type}
+                              </span>
+                            </div>
+                            <p className={`text-sm ${theme.textSecondary}`}>{task.description}</p>
+                            <p className={`text-xs ${theme.textSecondary} mt-1`}>+{task.reward} pts</p>
+                          </div>
+                        </div>
+                        {isCompleted ? (
+                          <span className="px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 text-sm font-medium whitespace-nowrap">
+                            ✓ Completed
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handleCompleteTask(task.id, task.reward)}
+                            className={`px-4 py-2 rounded-lg font-medium ${theme.accentBg} text-white hover:opacity-90 transition-opacity whitespace-nowrap`}
+                          >
+                            Complete Task
+                          </button>
+                        )}
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-medium truncate">{req.track.title}</p>
-                        <p className={`text-sm ${theme.textSecondary}`}>{req.artist}</p>
-                        <p className={`text-xs ${theme.textSecondary} mt-1`}>{req.track.duration} • {req.budget} pts budget</p>
-                      </div>
+                      
+                      {/* Progress Bar */}
+                      {task.progress < task.max && (
+                        <div className="w-full">
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className={theme.textSecondary}>Progress</span>
+                            <span className={theme.textSecondary}>{task.progress}/{task.max}</span>
+                          </div>
+                          <div className={`w-full h-2 rounded-full ${theme.bgTertiary} overflow-hidden`}>
+                            <div 
+                              className="h-full rounded-full bg-amber-500 transition-all duration-500"
+                              style={{ width: `${progressPercent}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    
-                    {/* Message */}
-                    <div className={`flex-1 p-3 rounded-xl ${theme.bgTertiary} text-sm ${theme.textSecondary}`}>
-                      "{req.message}"
-                    </div>
-                    
-                    {/* Actions */}
-                    {req.status === 'pending' ? (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleReview(req.id, 'reject')}
-                          className={`px-4 py-2 rounded-lg font-medium ${theme.bgSecondary} ${theme.text} hover:bg-red-500/20 hover:text-red-400 transition-colors`}
-                        >
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => handleReview(req.id, 'accept')}
-                          className={`px-4 py-2 rounded-lg font-medium ${theme.accentBg} text-white hover:opacity-90 transition-opacity`}
-                        >
-                          Accept +25 pts
-                        </button>
-                      </div>
-                    ) : (
-                      <span className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
-                        req.status === 'accepted' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {req.status === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
-                      </span>
-                    )}
                   </div>
-                  
-                  {/* Quick Listen */}
-                  {req.status === 'pending' && (
-                    <div className="mt-4 pt-4 border-t border-zinc-800">
-                      <button className={`flex items-center gap-2 text-sm ${theme.accent} hover:underline`}>
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        Preview track (30s)
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-        </section>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-        {/* My Playlists */}
-        <section>
-          <h2 className="text-xl font-bold mb-4">📚 My Playlists</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { name: "Late Night Vibes", tracks: 42, followers: "2.1K", genre: "Chill" },
-              { name: "Workout Energy", tracks: 28, followers: "890", genre: "Electronic" },
-              { name: "Sunday Jazz", tracks: 35, followers: "1.4K", genre: "Jazz" },
-            ].map((playlist, i) => (
-              <div key={i} className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border hover:${theme.cardHover} transition-all cursor-pointer`}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-10 h-10 rounded-lg ${theme.accentBg} flex items-center justify-center text-white font-bold`}>
-                    {playlist.name[0]}
+        {/* History Tab */}
+        {activeTab === 'history' && (
+          <section className={`p-5 md:p-6 rounded-2xl ${theme.bgCard} ${theme.border} border`}>
+            <h3 className="font-bold text-lg mb-6">📊 Earnings History</h3>
+            <div className="space-y-4">
+              {dailyTasks.map((task, index) => {
+                const isCompleted = completedTasks.includes(task.id);
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-center justify-between py-3 border-b ${theme.border} last:border-0`}
+                  >
+                    <div>
+                      <p className="font-medium">{isCompleted ? '✅' : '⏳'} {task.title}</p>
+                      <p className={`text-sm ${theme.textSecondary}`}>
+                        {isCompleted ? 'Completed' : 'Pending'} • {task.type}
+                      </p>
+                    </div>
+                    <span className={isCompleted ? 'text-emerald-400 font-bold' : 'text-zinc-500'}>
+                      {isCompleted ? `+${task.reward}` : '0'} pts
+                    </span>
                   </div>
-                  <div>
-                    <p className="font-medium">{playlist.name}</p>
-                    <p className={`text-xs ${theme.textSecondary}`}>{playlist.genre}</p>
-                  </div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className={theme.textSecondary}>{playlist.tracks} tracks</span>
-                  <span className={theme.accent}>{playlist.followers} followers</span>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Rules Tab */}
+        {activeTab === 'rules' && (
+          <section className={`p-5 md:p-6 rounded-2xl ${theme.bgCard} ${theme.border} border`}>
+            <h3 className="font-bold text-lg mb-6">📖 Earning Rules</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium mb-2">Points per Minute Listened</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={earningRules.pointsPerMinute}
+                    readOnly
+                    className="flex-1 accent-amber-500"
+                  />
+                  <span className={`font-bold ${theme.accent} w-8 text-right`}>{earningRules.pointsPerMinute}</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Bonus for Full Track Listen</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min="5"
+                    max="50"
+                    value={earningRules.pointsPerFullListen}
+                    readOnly
+                    className="flex-1 accent-amber-500"
+                  />
+                  <span className={`font-bold ${theme.accent} w-8 text-right`}>{earningRules.pointsPerFullListen}</span>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Daily Earning Cap per User</label>
+                <input
+                  type="number"
+                  value={earningRules.dailyCap}
+                  readOnly
+                  className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text}`}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Points per Curator Review</label>
+                <input
+                  type="number"
+                  value={earningRules.curatorReviewReward}
+                  readOnly
+                  className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text}`}
+                />
+              </div>
+            </div>
 
-        {/* Curator Tips */}
-        <section className={`p-5 rounded-2xl ${theme.bgTertiary} ${theme.border} border`}>
-          <h3 className="font-bold mb-3">💡 Curator Tips</h3>
-          <ul className={`space-y-2 text-sm ${theme.textSecondary}`}>
-            <li>• Listen to at least 60 seconds before reviewing</li>
-            <li>• Accept tracks that match your playlist's vibe</li>
-            <li>• Quality reviews earn bonus points and higher ratings</li>
-            <li>• You can review up to 10 tracks per day for max earnings</li>
-          </ul>
-        </section>
+            {/* Streak Bonuses */}
+            <div className="mt-6 pt-6 border-t border-zinc-800">
+              <h4 className="font-medium mb-3">🔥 Streak Bonuses</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {Object.entries(earningRules.streakBonus).map(([days, bonus]) => (
+                  <div key={days} className={`p-3 rounded-xl ${theme.bgTertiary} text-center`}>
+                    <p className="text-sm font-medium">{days} Days</p>
+                    <p className="text-lg font-bold text-amber-400">+{bonus} pts</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-zinc-800">
+              <h4 className="font-medium mb-3">💡 Tips to Maximize Earnings</h4>
+              <ul className={`space-y-2 text-sm ${theme.textSecondary}`}>
+                <li>• Complete daily tasks to build your streak bonus</li>
+                <li>• Listen to full tracks for bonus points</li>
+                <li>• Review tracks as a curator for higher rewards</li>
+                <li>• Share tracks with your network for referral bonuses</li>
+                <li>• Maintain your streak for bonus multipliers</li>
+              </ul>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

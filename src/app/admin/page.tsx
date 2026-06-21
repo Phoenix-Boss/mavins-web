@@ -1,7 +1,8 @@
 "use client";
 
-import { useTheme } from '../components/theme-provider';
-import { adminCampaigns, earningRules } from '../lib/dummy-data';
+import { useState } from 'react';
+import { useTheme } from '@/components/providers/ThemeProvider';
+import { adminCampaigns, earningRules } from '@/app/lib/dummy-data';
 
 export default function AdminPage() {
   const { theme } = useTheme();
@@ -208,5 +209,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
-import { useState } from 'react';
