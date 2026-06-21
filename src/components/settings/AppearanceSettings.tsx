@@ -1,15 +1,13 @@
-﻿// src/components/settings/AppearanceSettings.tsx
+// src/components/settings/AppearanceSettings.tsx
 'use client';
 
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { useTheme } from '@/components/providers/ThemeProvider';
-import { useAppStore } from '@/store/useAppStore';
 import { cn } from '@/lib/utils/cn';
 
 export const AppearanceSettings = () => {
-  const { theme, mode } = useTheme();
-  const { toggleTheme } = useAppStore();
+  const { theme, mode, toggleTheme } = useTheme();
 
   return (
     <Card className="p-4">
