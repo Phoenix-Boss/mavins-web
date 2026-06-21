@@ -19,6 +19,7 @@ export async function POST(request: Request) {
     
     return NextResponse.json({ success: true, deeplink });
   } catch (error) {
+    console.error('Generate deeplink error:', error);
     return NextResponse.json({ error: 'Failed to generate deeplink' }, { status: 500 });
   }
 }
