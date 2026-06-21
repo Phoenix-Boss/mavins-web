@@ -239,14 +239,16 @@ class NakamaAuthService {
       const saved = localStorage.getItem('nakama_session');
       if (saved) {
         try {
-          this.session = JSON.parse(saved);
-          if (this.session.expiresAt < Date.now() - 300000) {
-            this.session = null;
+          const parsedSession = JSON.parse(saved) as NakamaSession;
+          if (parsedSession && parsedSession.expiresAt < Date.now() - 300000) {
             localStorage.removeItem('nakama_session');
+            return null;
           }
+          this.session = parsedSession;
           return this.session;
         } catch (e) {
           console.error('Failed to restore session:', e);
+          localStorage.removeItem('nakama_session');
         }
       }
     }
