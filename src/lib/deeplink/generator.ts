@@ -1,4 +1,4 @@
-﻿// src/lib/deeplink/generator.ts
+// src/lib/deeplink/generator.ts
 import crypto from 'crypto';
 
 const SECRET_KEY = process.env.DEEPLINK_SECRET_KEY || 'soundwave-secret-key-2024';
@@ -14,6 +14,21 @@ export interface DeeplinkOptions {
   title?: string;
   artist?: string;
   shareId?: string;
+}
+
+/**
+ * Shape of a deeplink's params once parsed back off an incoming URL
+ * (track_id, user_id, ts, sig, plus optional task_id/activate) — this is the
+ * receiving-side counterpart to DeeplinkOptions, used by validateSignature()
+ * to recompute and compare the HMAC signature.
+ */
+export interface DeeplinkParams {
+  trackId: string;
+  userId: string;
+  taskId?: string;
+  activate?: boolean;
+  timestamp: number;
+  signature: string;
 }
 
 export function generateDeeplink(options: DeeplinkOptions): string {
