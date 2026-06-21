@@ -5,7 +5,7 @@ class NakamaService {
   private client: Client;
   private session: Session | null = null;
   private static instance: NakamaService;
-  private useProxy: boolean = false; // Set to false since CORS might be working
+  private useProxy: boolean = false;
 
   private constructor() {
     const host = 'nakama-mmpb.onrender.com';
@@ -14,8 +14,6 @@ class NakamaService {
     const serverKey = 'defaultkey';
     
     console.log('🔧 Creating Nakama client with:', { host, port, ssl });
-    // The Client constructor expects (serverKey, host, port, ssl)
-    // port should be a string for the constructor
     this.client = new Client(serverKey, host, port.toString(), ssl);
   }
 
@@ -30,9 +28,14 @@ class NakamaService {
     try {
       console.log('🔐 Authenticating with Nakama...', { userId, username });
       
-      // Try authentication with custom ID
-      // The third parameter is create (boolean) - true to create account if it doesn't exist
-      this.session = await this.client.authenticateCustom(userId, username || userId, true);
+      // The authenticateCustom method signature is:
+      // authenticateCustom(id: string, create?: boolean, username?: string)
+      // So the second parameter is create (boolean), third is username
+      this.session = await this.client.authenticateCustom(
+        userId, 
+        true,  // create account if it doesn't exist
+        username || userId  // username
+      );
       
       // Store session
       if (typeof window !== 'undefined' && this.session) {
@@ -88,7 +91,7 @@ class NakamaService {
   }
 
   async getUserRank(leaderboardId: string): Promise<{ rank: number; score: number } | null> {
-    if (!this.session) throw new error('Not authenticated');
+    if (!this.session) throw new Error('Not authenticated');
     
     try {
       const result = await this.client.listLeaderboardRecords(
