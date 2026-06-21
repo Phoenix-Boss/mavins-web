@@ -237,7 +237,7 @@ export default function EarnPage() {
                   type="number"
                   value={earningRules.dailyCap}
                   readOnly
-                  className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text}`}
+                  className={`w-full px-4 py-3 rounded-xl ${theme.bgTertiary} ${theme.border} border ${theme.text}`}
                 />
               </div>
               
@@ -247,7 +247,7 @@ export default function EarnPage() {
                   type="number"
                   value={earningRules.curatorReviewReward}
                   readOnly
-                  className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text}`}
+                  className={`w-full px-4 py-3 rounded-xl ${theme.bgTertiary} ${theme.border} border ${theme.text}`}
                 />
               </div>
             </div>
