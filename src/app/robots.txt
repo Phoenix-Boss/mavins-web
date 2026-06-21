@@ -1,0 +1,32 @@
+// src/app/robots.txt
+export default function robots() {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://mavins.vercel.app';
+  
+  return {
+    rules: {
+      userAgent: '*',
+      allow: [
+        '/',
+        '/share/',
+        '/earn',
+        '/leaderboard',
+        '/creator',
+        '/curator',
+      ],
+      disallow: [
+        '/api/',
+        '/auth/',
+        '/dashboard/',
+        '/profile/',
+        '/admin/',
+        '/earnings/',
+        '/settings/',
+        '/notifications/',
+        '/test-nakama/',
+        '/store/',
+      ],
+    },
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
+  };
+}
