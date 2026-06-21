@@ -1,148 +1,168 @@
-﻿// src/services/nakama/nakama.service.ts
-import { getNakamaClient, setNakamaSession, getNakamaSession, disconnectNakama, createSocket } from '@/lib/nakama/client';
-import type { NakamaMessage, SendMessageParams, TypingEvent, PoolConfig } from '@/lib/nakama/types';
-import { supabase } from '@/lib/supabase/client';
-
-type MessageHandler = (message: NakamaMessage) => void;
-type PresenceHandler = (presences: any[]) => void;
-type TypingHandler = (event: TypingEvent) => void;
+// services/nakama.service.ts
+import { Client, Session } from '@heroiclabs/nakama-js';
 
 class NakamaService {
-  private socket: any = null;
-  private currentChannelId: string | null = null;
-  private messageHandlers: MessageHandler[] = [];
-  private presenceHandlers: PresenceHandler[] = [];
-  private typingHandlers: TypingHandler[] = [];
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
-  private reconnectDelay = 3000;
+  private client: Client;
+  private session: Session | null = null;
+  private static instance: NakamaService;
 
-  async connect(userId: string, token: string): Promise<boolean> {
+  private constructor() {
+    const host = 'nakama-mmpb.onrender.com';
+    const port = 443;
+    const ssl = true;
+    const serverKey = 'defaultkey';
+
+    console.log('🔧 Creating Nakama client with:', { host, port, ssl });
+    this.client = new Client(serverKey, host, port.toString(), ssl);
+  }
+
+  static getInstance(): NakamaService {
+    if (!NakamaService.instance) {
+      NakamaService.instance = new NakamaService();
+    }
+    return NakamaService.instance;
+  }
+
+  async authenticate(userId: string, username?: string): Promise<Session> {
     try {
-      await import('@heroiclabs/nakama-js');
-      await setNakamaSession(token as any);
-      this.socket = await createSocket();
-      this.setupSocketHandlers();
-      this.reconnectAttempts = 0;
-      return true;
+      console.log('🔐 Authenticating with Nakama...', { userId, username });
+
+      this.session = await this.client.authenticateCustom(
+        userId,
+        true,
+        username || userId
+      );
+
+      if (typeof window !== 'undefined' && this.session) {
+        localStorage.setItem('nakama_session', JSON.stringify({
+          token: this.session.token,
+          refreshToken: this.session.refresh_token,
+          userId: this.session.user_id,
+          username: this.session.username,
+          expiresAt: this.session.expires_at
+        }));
+      }
+
+      console.log('✅ Authentication successful!');
+      return this.session;
+
     } catch (error) {
-      console.error('Nakama connection error:', error);
-      this.scheduleReconnect(userId, token);
-      return false;
+      console.error('❌ Nakama authentication failed:', error);
+      throw error;
     }
   }
 
-  private scheduleReconnect(userId: string, token: string) {
-    if (this.reconnectAttempts >= this.maxReconnectAttempts) return;
-    this.reconnectAttempts++;
-    setTimeout(() => {
-      this.connect(userId, token);
-    }, this.reconnectDelay * this.reconnectAttempts);
-  }
+  async getLeaderboard(leaderboardId: string, limit: number = 10) {
+    if (!this.session) throw new Error('Not authenticated');
 
-  private setupSocketHandlers() {
-    if (!this.socket) return;
-
-    this.socket.onmessage = (event: any) => {
-      const message = event.data;
-      if (message && message.channel_message) {
-        this.messageHandlers.forEach(handler => handler(message.channel_message));
-      }
-      if (message && message.channel_presence_event) {
-        this.presenceHandlers.forEach(handler => handler(message.channel_presence_event.joins || []));
-      }
-    };
-  }
-
-  async joinPool(poolConfig: PoolConfig): Promise<string> {
-    if (!this.socket) throw new Error('Socket not connected');
-    const channelId = `${poolConfig.region}_${poolConfig.tier}_${poolConfig.role}`;
-    
-    if (this.currentChannelId) {
-      await this.socket.leave_channel(this.currentChannelId);
-    }
-    
-    const channel = await this.socket.join_channel(channelId, 'room', { persistent: true });
-    this.currentChannelId = channel.id;
-    
-    await this.sendSystemMessage('joined', `${poolConfig.region} â€¢ ${poolConfig.tier} pool`);
-    
-    return channel.id;
-  }
-
-  async leavePool(): Promise<void> {
-    if (this.socket && this.currentChannelId) {
-      await this.socket.leave_channel(this.currentChannelId);
-      this.currentChannelId = null;
-    }
-  }
-
-  async sendMessage(params: SendMessageParams): Promise<NakamaMessage | null> {
-    if (!this.socket || !this.currentChannelId) return null;
-    
     try {
-      const result = await this.socket.write_chat_message(this.currentChannelId, {
-        text: params.content,
-        mentions: params.mentions || []
-      });
-      return result;
+      const result = await this.client.listLeaderboardRecords(
+        this.session,
+        leaderboardId,
+        [],   // ownerIds - empty array for all records
+        limit,
+        ''    // cursor - empty string for first page
+      );
+      return result.records || [];
     } catch (error) {
-      console.error('Send message error:', error);
+      console.error('Failed to fetch leaderboard:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Submit a score to a leaderboard.
+   *
+   * Client.writeLeaderboardRecord(session, leaderboardId, request: WriteLeaderboardRecord)
+   * where WriteLeaderboardRecord = { score?: string; subscore?: string; metadata?: object }
+   *
+   * - score/subscore must be passed as strings (client converts back to number on read).
+   * - metadata is a plain object, NOT a JSON string — the client stringifies it internally
+   *   before sending to the server, and parses it back automatically when reading records.
+   */
+  async submitScore(
+    leaderboardId: string,
+    score: number,
+    subscore: number = 0,
+    metadata?: Record<string, any>
+  ) {
+    if (!this.session) throw new Error('Not authenticated');
+
+    try {
+      return await this.client.writeLeaderboardRecord(
+        this.session,
+        leaderboardId,
+        {
+          score: score.toString(),
+          subscore: subscore.toString(),
+          metadata: metadata,
+        }
+      );
+    } catch (error) {
+      console.error('Failed to submit score:', error);
+      throw error;
+    }
+  }
+
+  async getUserRank(leaderboardId: string): Promise<{ rank: number; score: number } | null> {
+    if (!this.session) throw new Error('Not authenticated');
+
+    try {
+      const result = await this.client.listLeaderboardRecords(
+        this.session,
+        leaderboardId,
+        [this.session.user_id],  // ownerIds as string array
+        1,
+        ''
+      );
+
+      if (result.records && result.records.length > 0) {
+        // Note: at the Client level (not the raw NakamaApi level), rank/score
+        // are already typed and returned as numbers, not strings.
+        return {
+          rank: result.records[0].rank ?? 0,
+          score: result.records[0].score ?? 0
+        };
+      }
+      return null;
+    } catch (error) {
+      console.warn('Failed to get user rank:', error);
       return null;
     }
   }
 
-  async sendSystemMessage(type: string, content: string): Promise<void> {
-    if (!this.socket || !this.currentChannelId) return;
-    await this.socket.write_chat_message(this.currentChannelId, {
-      text: `[System] ${content}`,
-    });
+  async rpcCall(funcName: string, payload: any) {
+    if (!this.session) throw new Error('Not authenticated');
+
+    const payloadJson = JSON.stringify(payload);
+    const result = await this.client.rpc(this.session, funcName, payloadJson);
+    return result.payload ?? null;
   }
 
-  async sendTypingIndicator(isTyping: boolean): Promise<void> {
-    if (!this.socket || !this.currentChannelId) return;
-    await this.socket.channel_message_send(this.currentChannelId, {
-      typing: isTyping
-    });
-  }
+  getSession(): Session | null {
+    if (this.session) return this.session;
 
-  onMessage(handler: MessageHandler): () => void {
-    this.messageHandlers.push(handler);
-    return () => {
-      this.messageHandlers = this.messageHandlers.filter(h => h !== handler);
-    };
-  }
-
-  onPresence(handler: PresenceHandler): () => void {
-    this.presenceHandlers.push(handler);
-    return () => {
-      this.presenceHandlers = this.presenceHandlers.filter(h => h !== handler);
-    };
-  }
-
-  onTyping(handler: TypingHandler): () => void {
-    this.typingHandlers.push(handler);
-    return () => {
-      this.typingHandlers = this.typingHandlers.filter(h => h !== handler);
-    };
-  }
-
-  async disconnect(): Promise<void> {
-    if (this.socket) {
-      await this.socket.disconnect();
-      this.socket = null;
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('nakama_session');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          this.session = Session.restore(data.token, data.refreshToken);
+          return this.session;
+        } catch (e) {
+          console.error('Failed to restore session:', e);
+        }
+      }
     }
-    this.currentChannelId = null;
-    disconnectNakama();
+    return null;
   }
 
-  isConnected(): boolean {
-    return !!this.socket && !!this.currentChannelId;
-  }
-
-  getCurrentChannelId(): string | null {
-    return this.currentChannelId;
+  async disconnect() {
+    this.session = null;
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('nakama_session');
+    }
   }
 }
 
-export const nakamaService = new NakamaService();
+export const nakamaService = NakamaService.getInstance();
