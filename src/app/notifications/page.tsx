@@ -53,7 +53,7 @@ export default function NotificationsPage() {
             filtered.map((notif) => (
               <div
                 key={notif.id}
-                className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border ${!notif.read ? `border-l-4 ${theme.borderAccent} border-l-amber-500` : ''} hover:${theme.cardHover} transition-all cursor-pointer`}
+                className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border ${!notif.read ? `border-l-4 border-l-amber-500 ${theme.border}` : ''} hover:${theme.cardHover} transition-all cursor-pointer`}
               >
                 <div className="flex items-start gap-3">
                   <div className={`w-10 h-10 rounded-xl ${theme.bgTertiary} flex items-center justify-center text-xl flex-shrink-0`}>
