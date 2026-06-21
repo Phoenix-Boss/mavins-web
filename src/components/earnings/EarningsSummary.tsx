@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useTheme } from './theme-provider';
+import { useTheme } from '@/components/providers/ThemeProvider';
 
 export interface EarnCardProps {
   title: string;

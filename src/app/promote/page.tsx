@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useTheme } from '../components/theme-provider';
-import { userPromotions, Promotion } from '../lib/dummy-data';
+import { useTheme } from '@/components/providers/ThemeProvider';
+import { userPromotions, Promotion } from '@/app/lib/dummy-data';
 
 export default function PromotePage() {
   const { theme } = useTheme();
