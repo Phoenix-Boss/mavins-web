@@ -7,6 +7,9 @@ export interface DeeplinkParams {
   ts: string;
   sig: string;
   duration?: string;
+  share_id?: string;
+  title?: string;
+  artist?: string;
 }
 
 export interface ValidationResult {
@@ -19,11 +22,14 @@ export interface ValidationResult {
     activate: boolean;
     timestamp: number;
     duration?: number;
+    shareId?: string;
+    title?: string;
+    artist?: string;
   };
 }
 
 const SECRET_KEY = process.env.DEEPLINK_SECRET_KEY || 'soundwave-secret-key-2024';
-const MAX_AGE = 5 * 60 * 1000;
+const MAX_AGE = 5 * 60 * 1000; // 5 minutes
 
 export function validateDeeplink(params: DeeplinkParams): ValidationResult {
   try {
@@ -61,6 +67,9 @@ export function validateDeeplink(params: DeeplinkParams): ValidationResult {
         activate: params.activate === 'true',
         timestamp: timestamp,
         duration: params.duration ? parseInt(params.duration) : undefined,
+        shareId: params.share_id,
+        title: params.title,
+        artist: params.artist,
       },
     };
   } catch (error) {
