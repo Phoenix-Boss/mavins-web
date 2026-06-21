@@ -5,9 +5,20 @@ import { cookies } from 'next/headers';
 export const createServerSupabaseClient = async () => {
   const cookieStore = await cookies();
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+  if (!supabaseUrl) {
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
+  }
+
+  if (!supabaseAnonKey) {
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
+  }
+
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get(name: string) {
@@ -23,3 +34,19 @@ export const createServerSupabaseClient = async () => {
     }
   );
 };
+
+// Export a direct supabase instance for server components (if needed)
+export const supabase = createServerClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    cookies: {
+      get(name: string) {
+        // This is a workaround - for server components, use createServerSupabaseClient() instead
+        return undefined;
+      },
+      set(name: string, value: string, options: any) {},
+      remove(name: string, options: any) {},
+    },
+  }
+);
