@@ -1,4 +1,4 @@
-﻿// src/app/settings/page.tsx
+// src/app/settings/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -16,15 +16,33 @@ import { Button } from '@/components/ui/Button';
 
 export default function SettingsPage() {
   const { theme } = useTheme();
-  const { user, setIsSidebarOpen, setIsTaskPanelOpen, setIsNotificationPanelOpen } = useAppStore();
+  const {
+    user,
+    tasks,
+    notifications,
+    points,
+    setIsSidebarOpen,
+    setIsTaskPanelOpen,
+    setIsNotificationPanelOpen,
+  } = useAppStore();
   const [isSidebarOpen, setIsSidebarOpenState] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'privacy' | 'appearance'>('appearance');
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
+  const incompleteTasksCount = tasks.filter(t => !t.isCompleted).length;
+  const unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
+
   return (
     <div className={cn('min-h-screen pb-16 md:pb-0', theme.bg)}>
-      <Header onMenuClick={() => setIsSidebarOpenState(true)} onTaskClick={() => setIsTaskPanelOpen(true)} onNotificationClick={() => setIsNotificationPanelOpen(true)} />
+      <Header
+        onMenuClick={() => setIsSidebarOpenState(true)}
+        onTaskClick={() => setIsTaskPanelOpen(true)}
+        onNotificationClick={() => setIsNotificationPanelOpen(true)}
+        taskCount={incompleteTasksCount}
+        notificationCount={unreadNotificationsCount}
+        points={points}
+      />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
       <MobileNav activeTab="settings" />
 
