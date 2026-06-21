@@ -1,4 +1,4 @@
-﻿// src/lib/nakama/types.ts
+// src/lib/nakama/types.ts
 export interface NakamaMessage {
   channelId: string;
   messageId: string;
