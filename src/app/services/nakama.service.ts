@@ -134,11 +134,16 @@ class NakamaService {
     }
   }
 
+  /**
+   * Call a server-side RPC function.
+   *
+   * Client.rpc(session, id, input) accepts a plain object/value for `input` and
+   * JSON.stringify's it internally — do not pre-stringify the payload here.
+   */
   async rpcCall(funcName: string, payload: any) {
     if (!this.session) throw new Error('Not authenticated');
 
-    const payloadJson = JSON.stringify(payload);
-    const result = await this.client.rpc(this.session, funcName, payloadJson);
+    const result = await this.client.rpc(this.session, funcName, payload);
     return result.payload ?? null;
   }
 
