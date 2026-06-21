@@ -26,8 +26,8 @@ export default function CreatorPage() {
   const { stats, history, requestWithdrawal, refresh } = useWithdrawal();
 
   // Get task and notification counts
-  const taskCount = 0; // Replace with actual task count from your data
-  const notificationCount = 0; // Replace with actual notification count
+  const taskCount = 0;
+  const notificationCount = 0;
   const points = stats?.totalPoints || 0;
 
   const handleWithdraw = async (amount: number, method: 'paypal' | 'bank' | 'crypto', details: any) => {
@@ -62,7 +62,13 @@ export default function CreatorPage() {
         points={points}
       />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
-      <MobileNav activeTab="creator" />
+      <MobileNav 
+        activeTab="creator" 
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
+        onTabChange={() => {}}
+      />
 
       <main className="pt-24 pb-8">
         <Container>
