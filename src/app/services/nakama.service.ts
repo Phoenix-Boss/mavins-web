@@ -28,9 +28,6 @@ class NakamaService {
     try {
       console.log('🔐 Authenticating with Nakama...', { userId, username });
       
-      // The authenticateCustom method signature is:
-      // authenticateCustom(id: string, create?: boolean, username?: string)
-      // So the second parameter is create (boolean), third is username
       this.session = await this.client.authenticateCustom(
         userId, 
         true,  // create account if it doesn't exist
@@ -41,10 +38,10 @@ class NakamaService {
       if (typeof window !== 'undefined' && this.session) {
         localStorage.setItem('nakama_session', JSON.stringify({
           token: this.session.token,
-          refreshToken: this.session.refresh_token,  // Note: refresh_token with underscore
-          userId: this.session.user_id,  // Note: user_id with underscore
+          refreshToken: this.session.refresh_token,
+          userId: this.session.user_id,
           username: this.session.username,
-          expiresAt: this.session.expires_at  // Note: expires_at with underscore
+          expiresAt: this.session.expires_at
         }));
       }
       
@@ -61,13 +58,16 @@ class NakamaService {
     if (!this.session) throw new Error('Not authenticated');
     
     try {
+      // listLeaderboardRecords signature:
+      // listLeaderboardRecords(session: Session, leaderboardId: string, ownerIds?: string[], limit?: number, cursor?: string)
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
-        '',
-        limit
+        [],  // ownerIds - empty array for all records
+        limit,
+        ''   // cursor - empty string for first page
       );
-      return result.records;
+      return result.records || [];
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
       return [];
@@ -97,15 +97,15 @@ class NakamaService {
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
-        '',
+        [this.session.user_id],  // ownerIds as string array
         1,
-        [this.session.user_id]  // Note: user_id with underscore
+        ''
       );
       
       if (result.records && result.records.length > 0) {
         return {
-          rank: result.records[0].rank,
-          score: result.records[0].score
+          rank: result.records[0].rank || 0,
+          score: result.records[0].score || 0
         };
       }
       return null;
