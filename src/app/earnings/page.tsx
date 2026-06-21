@@ -7,74 +7,105 @@ import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { EarnCard } from '@/components/earnings/EarningsSummary';
-import { PointsHistory, HistoryEntry } from '@/components/earnings/PointsHistory';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAppStore } from '@/store/useAppStore';
 import { cn } from '@/lib/utils/cn';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 
 export default function EarningsPage() {
   const { theme } = useTheme();
-  const { user, setIsSidebarOpen, setIsTaskPanelOpen, setIsNotificationPanelOpen } = useAppStore();
+  const { setIsSidebarOpen, setIsTaskPanelOpen, setIsNotificationPanelOpen } = useAppStore();
   const [isSidebarOpen, setIsSidebarOpenState] = useState(false);
-  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
-  const historyEntries: HistoryEntry[] = [
-    { id: '1', action: 'Completed "Play Nocturnal" task', points: 150, timestamp: new Date() },
-    { id: '2', action: 'Completed "Play Electronic" task', points: 100, timestamp: new Date(Date.now() - 3600000) },
-    { id: '3', action: 'Daily streak bonus (7 days)', points: 100, timestamp: new Date(Date.now() - 86400000) },
-    { id: '4', action: 'Welcome bonus', points: 250, timestamp: new Date(Date.now() - 172800000) }
-  ];
+  // Get task and notification counts
+  const taskCount = 0;
+  const notificationCount = 0;
+  const points = 0;
 
   return (
     <div className={cn('min-h-screen pb-16 md:pb-0', theme.bg)}>
-      <Header onMenuClick={() => setIsSidebarOpenState(true)} onTaskClick={() => setIsTaskPanelOpen(true)} onNotificationClick={() => setIsNotificationPanelOpen(true)} />
+      <Header 
+        onMenuClick={() => setIsSidebarOpenState(true)} 
+        onTaskClick={() => setIsTaskPanelOpen(true)} 
+        onNotificationClick={() => setIsNotificationPanelOpen(true)}
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
+      />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
-      <MobileNav activeTab="earnings" />
+      <MobileNav 
+        activeTab="earnings"
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
+        onTabChange={() => {}}
+      />
 
       <main className="pt-24 pb-8">
         <Container>
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-bold">Earnings</h1>
-              <p className={cn('text-sm mt-1', theme.textSecondary)}>Track your points and rewards</p>
+              <h1 className="text-2xl font-bold">💰 Earnings</h1>
+              <p className={cn('text-sm mt-1', theme.textSecondary)}>Track your earnings and points</p>
             </div>
 
-            <EarningsSummary totalPoints={user?.points || 1250} weeklyPoints={450} rank={42} />
+            {/* Earnings Summary Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <EarnCard
+                title="Total Points"
+                value="2,450"
+                icon="⭐"
+                subtitle="+150 this week"
+              />
+              <EarnCard
+                title="Total Earned"
+                value="$24.50"
+                icon="💰"
+                subtitle="+$1.50 this week"
+              />
+              <EarnCard
+                title="Available"
+                value="$18.75"
+                icon="💳"
+                subtitle="Ready for withdrawal"
+              />
+              <EarnCard
+                title="Tasks Completed"
+                value="12"
+                icon="✅"
+                subtitle="3 today"
+              />
+            </div>
 
-            <PointsHistory entries={historyEntries} />
-
-            <Card className="p-4">
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div>
-                  <h3 className="font-semibold">Ready to Withdraw?</h3>
-                  <p className={cn('text-sm', theme.textSecondary)}>Minimum 1000 points required</p>
+            {/* Recent Earnings */}
+            <div className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border`}>
+              <h3 className="font-semibold mb-4">📊 Recent Earnings</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className={theme.textSecondary}>Completed "Daily Check-in"</span>
+                  <span className="text-emerald-400">+10 pts</span>
                 </div>
-                <Button variant="primary" onClick={() => setShowWithdrawModal(true)} disabled={(user?.points || 0) < 1000}>
-                  Withdraw Points
-                </Button>
+                <div className="flex items-center justify-between text-sm">
+                  <span className={theme.textSecondary}>Listened to "Midnight Dreams"</span>
+                  <span className="text-emerald-400">+5 pts</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className={theme.textSecondary}>Shared a track</span>
+                  <span className="text-emerald-400">+25 pts</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className={theme.textSecondary}>7-day streak bonus</span>
+                  <span className="text-emerald-400">+100 pts</span>
+                </div>
               </div>
-            </Card>
+            </div>
+
+            {/* Withdraw Button */}
+            <button className={`w-full py-3 rounded-xl ${theme.accentBg} text-white font-semibold hover:opacity-90 transition-opacity`}>
+              💸 Withdraw Earnings
+            </button>
           </div>
         </Container>
       </main>
-
-      {showWithdrawModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/70" onClick={() => setShowWithdrawModal(false)} />
-          <div className="relative z-10 w-full max-w-md bg-neutral-900 rounded-2xl p-6 border border-neutral-800">
-            <h2 className="text-xl font-bold mb-4">Withdraw Points</h2>
-            <p className="text-neutral-400 mb-4">Download the SoundWave Creator App to withdraw your points.</p>
-            <div className="flex gap-3">
-              <Button variant="primary" fullWidth onClick={() => window.open('https://play.google.com/store/apps/details?id=com.soundwave.app', '_blank')}>
-                Download App
-              </Button>
-              <Button variant="ghost" onClick={() => setShowWithdrawModal(false)}>Close</Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
