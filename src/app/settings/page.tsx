@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -16,6 +17,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function SettingsPage() {
   const { theme } = useTheme();
+  const router = useRouter();
   const {
     user,
     tasks,
@@ -44,7 +46,13 @@ export default function SettingsPage() {
         points={points}
       />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
-      <MobileNav activeTab="settings" />
+      <MobileNav
+        activeTab="settings"
+        taskCount={incompleteTasksCount}
+        notificationCount={unreadNotificationsCount}
+        points={points}
+        onTabChange={(tab) => router.push(tab === 'home' ? '/' : `/${tab}`)}
+      />
 
       <main className="pt-24 pb-8">
         <Container>
