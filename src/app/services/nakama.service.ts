@@ -59,9 +59,9 @@ class NakamaService {
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
-        [],
+        [],   // ownerIds - empty array for all records
         limit,
-        ''
+        ''    // cursor - empty string for first page
       );
       return result.records || [];
     } catch (error) {
@@ -72,8 +72,13 @@ class NakamaService {
 
   /**
    * Submit a score to a leaderboard.
-   * nakama-js signature: writeLeaderboardRecord(session, leaderboardId, request)
-   * where request = { score?, subscore?, metadata?, operator? } — score/subscore are strings.
+   *
+   * Client.writeLeaderboardRecord(session, leaderboardId, request: WriteLeaderboardRecord)
+   * where WriteLeaderboardRecord = { score?: string; subscore?: string; metadata?: object }
+   *
+   * - score/subscore must be passed as strings (client converts back to number on read).
+   * - metadata is a plain object, NOT a JSON string — the client stringifies it internally
+   *   before sending to the server, and parses it back automatically when reading records.
    */
   async submitScore(
     leaderboardId: string,
@@ -90,7 +95,7 @@ class NakamaService {
         {
           score: score.toString(),
           subscore: subscore.toString(),
-          metadata: metadata ? JSON.stringify(metadata) : undefined,
+          metadata: metadata,
         }
       );
     } catch (error) {
@@ -106,15 +111,17 @@ class NakamaService {
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
-        [this.session.user_id],
+        [this.session.user_id],  // ownerIds as string array
         1,
         ''
       );
 
       if (result.records && result.records.length > 0) {
+        // Note: at the Client level (not the raw NakamaApi level), rank/score
+        // are already typed and returned as numbers, not strings.
         return {
-          rank: Number(result.records[0].rank) || 0,
-          score: Number(result.records[0].score) || 0
+          rank: result.records[0].rank ?? 0,
+          score: result.records[0].score ?? 0
         };
       }
       return null;
@@ -129,7 +136,7 @@ class NakamaService {
 
     const payloadJson = JSON.stringify(payload);
     const result = await this.client.rpc(this.session, funcName, payloadJson);
-    return result.payload ? JSON.parse(result.payload as unknown as string) : null;
+    return result.payload ?? null;
   }
 
   getSession(): Session | null {
