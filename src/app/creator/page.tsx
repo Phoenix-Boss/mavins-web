@@ -61,13 +61,7 @@ export default function CreatorPage() {
         notificationCount={notificationCount}
         points={points}
       />
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} userStats={{
-        points: stats?.totalPoints || 0,
-        streak: 0,
-        tier: 'Creator',
-        username: user.email?.split('@')[0] || 'User',
-        email: user.email || '',
-      }} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
       <MobileNav activeTab="creator" />
 
       <main className="pt-24 pb-8">
