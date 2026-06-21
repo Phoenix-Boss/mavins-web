@@ -58,8 +58,6 @@ class NakamaService {
     if (!this.session) throw new Error('Not authenticated');
     
     try {
-      // listLeaderboardRecords signature:
-      // listLeaderboardRecords(session: Session, leaderboardId: string, ownerIds?: string[], limit?: number, cursor?: string)
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
@@ -74,15 +72,17 @@ class NakamaService {
     }
   }
 
-  async submitScore(leaderboardId: string, score: number, subscore: number = 0) {
+  async submitScore(leaderboardId: string, score: number) {
     if (!this.session) throw new Error('Not authenticated');
     
     try {
+      // writeLeaderboardRecord signature:
+      // writeLeaderboardRecord(session: Session, leaderboardId: string, score: number)
+      // Note: subscore is not a separate parameter in newer versions
       return await this.client.writeLeaderboardRecord(
         this.session,
         leaderboardId,
-        score,
-        subscore
+        score
       );
     } catch (error) {
       console.error('Failed to submit score:', error);
