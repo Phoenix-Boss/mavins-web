@@ -435,7 +435,7 @@ export default function HomePage() {
             <HeroSection
               artistName={featuredArtist.artistName}
               songTitle={featuredArtist.songTitle}
-              albumArt={featuredArtist.albumArt}
+              albumArt={featuredArtist.albumArt || ''}
               playCount={featuredArtist.playCount}
               onPlay={handlePlayFeatured}
               hasWelcomeBonus={isAuthenticated && !hasActivated}
@@ -472,7 +472,7 @@ export default function HomePage() {
                 <Card className="rounded-t-none" padding="none">
                   <ChatList 
                     messages={chatMessages} 
-                    currentUserId={user?.username || user?.email?.split('@')[0]} 
+                    currentUserId={user?.username || user?.email?.split('@')[0] || ''} 
                   />
                   <ChatInput onSendMessage={handleSendMessage} />
                 </Card>
