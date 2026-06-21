@@ -64,8 +64,9 @@ export const useGamification = () => {
     if (success) {
       await loadAllData();
       // updateUserPoints adds this amount to the user's current points (delta, not total).
-      if (task) {
-        await updateUserPoints(task.reward_points ?? 0);
+      // Reward amount lives on the nested DailyTask (UserTask.task.rewardPoints).
+      if (task?.task) {
+        await updateUserPoints(task.task.rewardPoints ?? 0);
       }
     }
     return success;
@@ -89,7 +90,7 @@ export const useGamification = () => {
   }, [user, loadAllData]);
 
   const getTaskById = useCallback((taskId: string) => {
-    return tasks.find(t => t.task_id === taskId);
+    return tasks.find(t => t.taskId === taskId);
   }, [tasks]);
 
   const getTodayProgress = useCallback(async () => {
