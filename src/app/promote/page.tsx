@@ -75,7 +75,7 @@ export default function PromotePage() {
                 placeholder="https://soundcloud.com/artist/track or upload file"
                 value={formData.trackUrl}
                 onChange={(e) => setFormData({ ...formData, trackUrl: e.target.value })}
-                className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text} focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                className={`w-full px-4 py-3 rounded-xl ${theme.bgTertiary} ${theme.border} border ${theme.text} focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 required
               />
             </div>
@@ -87,7 +87,7 @@ export default function PromotePage() {
                 <select
                   value={formData.genre}
                   onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text} focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                  className={`w-full px-4 py-3 rounded-xl ${theme.bgTertiary} ${theme.border} border ${theme.text} focus:outline-none focus:ring-2 focus:ring-amber-500`}
                   required
                 >
                   <option value="">Select genre...</option>
@@ -142,7 +142,7 @@ export default function PromotePage() {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
-                className={`w-full px-4 py-3 rounded-xl ${theme.inputBg} ${theme.border} border ${theme.text} focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none`}
+                className={`w-full px-4 py-3 rounded-xl ${theme.bgTertiary} ${theme.border} border ${theme.text} focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none`}
               />
             </div>
 
