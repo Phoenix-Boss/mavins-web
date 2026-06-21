@@ -49,7 +49,7 @@ export async function POST(
         .then(() => {
           // Analytics inserted successfully
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           console.warn('[Share Track] Analytics insert error (non-critical):', error);
         });
     } catch (analyticsError) {
