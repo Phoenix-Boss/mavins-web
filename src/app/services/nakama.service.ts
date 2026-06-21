@@ -14,7 +14,9 @@ class NakamaService {
     const serverKey = 'defaultkey';
     
     console.log('🔧 Creating Nakama client with:', { host, port, ssl });
-    this.client = new Client(serverKey, host, port, ssl);
+    // The Client constructor expects (serverKey, host, port, ssl)
+    // port should be a string for the constructor
+    this.client = new Client(serverKey, host, port.toString(), ssl);
   }
 
   static getInstance(): NakamaService {
