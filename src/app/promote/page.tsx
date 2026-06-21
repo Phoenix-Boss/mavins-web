@@ -207,7 +207,7 @@ export default function PromotePage() {
                       </div>
                       <div className="flex justify-between text-xs mt-2">
                         <span className={theme.textSecondary}>Spins generated: 2.4K</span>
-                        <span className={theme.success}>+180 followers</span>
+                        <span className={theme.textSecondary}>+180 followers</span>
                       </div>
                     </div>
                   )}
