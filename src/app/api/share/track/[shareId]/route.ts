@@ -36,8 +36,8 @@ export async function POST(
     // Insert click analytics asynchronously (non-blocking)
     // This is a separate operation from the click count
     try {
-      // Don't await - fire and forget
-      supabase
+      // Use void to explicitly ignore the promise
+      void supabase
         .from('share_analytics')
         .insert({
           share_id: shareId,
