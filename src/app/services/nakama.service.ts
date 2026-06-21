@@ -77,12 +77,14 @@ class NakamaService {
     
     try {
       // writeLeaderboardRecord signature:
-      // writeLeaderboardRecord(session: Session, leaderboardId: string, score: number)
-      // Note: subscore is not a separate parameter in newer versions
+      // writeLeaderboardRecord(session: Session, leaderboardId: string, score: number, subscore?: number, metadata?: string)
+      // We need to pass all parameters explicitly
       return await this.client.writeLeaderboardRecord(
         this.session,
         leaderboardId,
-        score
+        score,
+        0,  // subscore
+        ''  // metadata (empty string)
       );
     } catch (error) {
       console.error('Failed to submit score:', error);
