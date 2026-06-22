@@ -19,7 +19,7 @@ const tabs: { id: TabType; label: string; icon: string }[] = [
 export function SettingsTabs({ activeTab, onTabChange }: SettingsTabsProps) {
   return (
     <div className="flex flex-wrap gap-2 border-b border-zinc-800 pb-4">
-      {tabs.map((tab) => (
+      {tabs.map((tab: any) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
@@ -37,3 +37,4 @@ export function SettingsTabs({ activeTab, onTabChange }: SettingsTabsProps) {
     </div>
   );
 }
+

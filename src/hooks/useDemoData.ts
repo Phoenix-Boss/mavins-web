@@ -178,9 +178,9 @@ export function useDemoData() {
           schema: 'public',
           table: 'tracks'
         },
-        (payload) => {
+        (payload: any) => {
           const updatedTrack = payload.new as any;
-          setTracks(prev => prev.map(track => 
+          setTracks(prev => prev.map((track: any) => 
             track.id === updatedTrack.id 
               ? { ...track, plays: updatedTrack.plays }
               : track
@@ -311,7 +311,7 @@ export function useDemoData() {
           table: 'notification',
           filter: `user_id=eq.${user?.id}`
         },
-        (payload) => {
+        (payload: any) => {
           const newNotification = payload.new as any;
           const formattedNotification = {
             id: newNotification.id,
@@ -355,7 +355,7 @@ export function useDemoData() {
         .select('id, username')
         .in('id', senderIds);
 
-      const userMap = new Map(users?.map(u => [u.id, u.username]) || []);
+      const userMap = new Map(users?.map((u: any) => [u.id, u.username]) || []);
 
       const formattedMessages = messages.map((m: any) => ({
         id: m.id,
@@ -380,7 +380,7 @@ export function useDemoData() {
           table: 'message',
           filter: 'stream_mode=eq.chat'
         },
-        async (payload) => {
+        async (payload: any) => {
           const newMessage = payload.new as any;
           
           const { data: sender } = await supabase
@@ -432,3 +432,5 @@ export function useDemoData() {
     isLoading
   };
 }
+
+

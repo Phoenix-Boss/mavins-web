@@ -100,7 +100,7 @@ export const NotificationPanel = ({
 
   if (!isOpen) return null;
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const unreadCount = notifications.filter((n: any) => !n.isRead).length;
 
   return (
     <>
@@ -149,7 +149,7 @@ export const NotificationPanel = ({
                 <p className="text-sm mt-1">When you receive notifications, they will appear here</p>
               </div>
             ) : (
-              notifications.map((notification) => (
+              notifications.map((notification: any) => (
                 <div
                   key={notification.id}
                   onClick={() => !notification.isRead && onMarkAsRead(notification.id)}
@@ -195,3 +195,5 @@ export const NotificationPanel = ({
     </>
   );
 };
+
+

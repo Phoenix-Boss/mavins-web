@@ -36,7 +36,7 @@ export const SongList = ({ tracks, isLoading = false, onTrackClick, title = "Fea
     return (
       <div className="space-y-2">
         {title && <h2 className={cn('text-lg font-semibold mb-4', theme.text)}>{title}</h2>}
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4, 5].map((i: any) => (
           <div key={i} className="flex items-center gap-4 p-3 rounded-xl animate-pulse">
             <div className="w-8 h-4 bg-neutral-700 rounded" />
             <div className="w-10 h-10 rounded-md bg-neutral-700" />

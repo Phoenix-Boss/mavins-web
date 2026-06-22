@@ -1,4 +1,4 @@
-﻿// src/hooks/queries/useArtistQuery.ts
+// src/hooks/queries/useArtistQuery.ts
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -26,7 +26,7 @@ const fetchTrendingArtists = async (): Promise<Artist[]> => {
   
   if (error) throw new Error(error.message);
   
-  const artists = data.map(user => ({
+  const artists = data.map((user: any) => ({
     id: user.id,
     name: user.username,
     avatar: user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=amber&color=white`,
@@ -45,3 +45,4 @@ export const useArtistQuery = () => {
     staleTime: 15 * 60 * 1000,
   });
 };
+

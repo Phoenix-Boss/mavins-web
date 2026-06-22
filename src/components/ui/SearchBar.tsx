@@ -1,4 +1,4 @@
-﻿// src/components/ui/SearchBar.tsx
+// src/components/ui/SearchBar.tsx
 'use client';
 
 import { useState } from "react";
@@ -39,7 +39,7 @@ export function SearchBar({
         theme.border
       )}>
         <span className={cn('pl-3 sm:pl-4', theme.textSecondary)}>
-          🔍
+          ??
         </span>
         <input
           type="text"
@@ -57,7 +57,7 @@ export function SearchBar({
             className={cn('pr-3 sm:pr-4 hover:text-amber-400 transition-colors', theme.textSecondary)}
             aria-label="Toggle filters"
           >
-            ⚙️
+            ??
           </button>
         )}
         {query && (
@@ -66,7 +66,7 @@ export function SearchBar({
             className={cn('absolute right-10 sm:right-12 hover:text-amber-400 transition-colors', theme.textSecondary)}
             aria-label="Clear"
           >
-            ✕
+            ?
           </button>
         )}
       </div>
@@ -74,7 +74,7 @@ export function SearchBar({
       {showFilters && showFilter && (
         <div className={cn('mt-2 p-3 sm:p-4 rounded-xl border shadow-lg', theme.bgCard, theme.border)}>
           <div className="flex flex-wrap gap-2">
-            {["All", "Songs", "Artists", "Albums", "Playlists"].map((filter) => (
+            {["All", "Songs", "Artists", "Albums", "Playlists"].map((filter: any) => (
               <button
                 key={filter}
                 className={cn(

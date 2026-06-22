@@ -32,8 +32,8 @@ export default function SettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
-  const incompleteTasksCount = tasks.filter(t => !t.isCompleted).length;
-  const unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
+  const incompleteTasksCount = tasks.filter((t: any) => !t.isCompleted).length;
+  const unreadNotificationsCount = notifications.filter((n: any) => !n.isRead).length;
 
   return (
     <div className={cn('min-h-screen pb-16 md:pb-0', theme.bg)}>
@@ -132,4 +132,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
 

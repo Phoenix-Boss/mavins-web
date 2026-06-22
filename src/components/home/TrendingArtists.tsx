@@ -1,4 +1,4 @@
-﻿// src/components/home/TrendingArtists.tsx
+// src/components/home/TrendingArtists.tsx
 'use client';
 
 import React from 'react';
@@ -25,7 +25,7 @@ export const TrendingArtists = ({ artists, isLoading = false, onArtistClick }: T
   if (isLoading) {
     return (
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4, 5].map((i: any) => (
           <div key={i} className="flex flex-col items-center gap-2 min-w-[80px] animate-pulse">
             <div className="w-20 h-20 rounded-full bg-neutral-700" />
             <div className="h-3 bg-neutral-700 rounded w-16" />
@@ -62,7 +62,7 @@ export const TrendingArtists = ({ artists, isLoading = false, onArtistClick }: T
 
   return (
     <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-      {artists.map((artist) => (
+      {artists.map((artist: any) => (
         <div
           key={artist.id}
           onClick={() => onArtistClick?.(artist.id)}
@@ -86,7 +86,7 @@ export const TrendingArtists = ({ artists, isLoading = false, onArtistClick }: T
               </div>
             )}
             {artist.chartPosition <= 3 && (
-              <span className="absolute -top-1 -right-1 text-lg">🔥</span>
+              <span className="absolute -top-1 -right-1 text-lg">??</span>
             )}
           </div>
           <span className={cn('text-sm font-medium text-center truncate max-w-[80px]', theme.text)}>
@@ -100,3 +100,4 @@ export const TrendingArtists = ({ artists, isLoading = false, onArtistClick }: T
     </div>
   );
 };
+

@@ -31,13 +31,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     
     if (duration > 0) {
       setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
+        setToasts((prev) => prev.filter((t: any) => t.id !== id));
       }, duration);
     }
   }, []);
 
   const hideToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    setToasts((prev) => prev.filter((t: any) => t.id !== id));
   }, []);
 
   const getToastStyles = (type: ToastType): string => {
@@ -65,7 +65,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       {typeof document !== 'undefined' && createPortal(
         <div className="fixed bottom-4 right-4 z-50 space-y-2">
-          {toasts.map((toast) => (
+          {toasts.map((toast: any) => (
             <div
               key={toast.id}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg animate-in slide-in-from-right-5 duration-300 ${getToastStyles(toast.type)}`}
@@ -96,3 +96,4 @@ export function useToast() {
   }
   return context;
 }
+

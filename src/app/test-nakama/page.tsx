@@ -39,7 +39,7 @@ export default function TestNakamaPage() {
     setTestScoreStatus('');
     setLeaderboardExists(null);
     
-    setResults(prev => prev.map(r => ({ ...r, status: 'pending', message: 'Testing...', data: undefined })));
+    setResults(prev => prev.map((r: any) => ({ ...r, status: 'pending', message: 'Testing...', data: undefined })));
     
     const host = 'nakama-mmpb.onrender.com';
     const serverKey = 'DaNjI20sbHAZBy3h86xCoTfMleidWELw';

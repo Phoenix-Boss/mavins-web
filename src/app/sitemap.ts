@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Add share routes (optional - but note they change frequently)
   // if (shares) {
-  //   shares.forEach((share) => {
+  //   shares.forEach((share: any) => {
   //     routes.push({
   //       url: `${baseUrl}/share/${share.share_id}`,
   //       lastModified: new Date(share.updated_at),

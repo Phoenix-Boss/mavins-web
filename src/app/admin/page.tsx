@@ -25,7 +25,7 @@ export default function AdminPage() {
 
         {/* Admin Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-2 border-b border-zinc-800">
-          {(['overview', 'earnings', 'campaigns', 'users'] as const).map((tab) => (
+          {(['overview', 'earnings', 'campaigns', 'users'] as const).map((tab: any) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

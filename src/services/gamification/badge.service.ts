@@ -1,4 +1,4 @@
-﻿// src/services/gamification/badge.service.ts
+// src/services/gamification/badge.service.ts
 import { supabase } from '@/lib/supabase/client';
 
 export interface Badge {
@@ -10,16 +10,16 @@ export interface Badge {
 }
 
 const BADGES: Badge[] = [
-  { id: 'welcome_pioneer', name: 'Welcome Pioneer', description: 'Played featured artist for first time', icon: 'ðŸŽ‰' },
-  { id: 'week_warrior', name: 'Week Warrior', description: 'Maintained 7 day streak', icon: 'ðŸ”¥' },
-  { id: 'task_master', name: 'Task Master', description: 'Completed 50 tasks', icon: 'âœ…' },
-  { id: 'genre_explorer', name: 'Genre Explorer', description: 'Played 5 different genres', icon: 'ðŸŽ§' },
-  { id: 'night_owl', name: 'Night Owl', description: 'Played songs after midnight 10 times', icon: 'ðŸ¦‰' },
-  { id: 'social_butterfly', name: 'Social Butterfly', description: 'Got 10 @mentions from seeds', icon: 'ðŸ¦‹' },
-  { id: 'rising_star', name: 'Rising Star', description: 'Reached 100 points', icon: 'â­' },
-  { id: 'point_collector', name: 'Point Collector', description: 'Reached 500 points', icon: 'ðŸ’°' },
-  { id: 'points_master', name: 'Points Master', description: 'Reached 1000 points', icon: 'ðŸ†' },
-  { id: 'legend', name: 'Legend', description: 'Reached 5000 points', icon: 'ðŸ‘‘' },
+  { id: 'welcome_pioneer', name: 'Welcome Pioneer', description: 'Played featured artist for first time', icon: '🎉' },
+  { id: 'week_warrior', name: 'Week Warrior', description: 'Maintained 7 day streak', icon: '🔥' },
+  { id: 'task_master', name: 'Task Master', description: 'Completed 50 tasks', icon: '✅' },
+  { id: 'genre_explorer', name: 'Genre Explorer', description: 'Played 5 different genres', icon: '🎧' },
+  { id: 'night_owl', name: 'Night Owl', description: 'Played songs after midnight 10 times', icon: '🦉' },
+  { id: 'social_butterfly', name: 'Social Butterfly', description: 'Got 10 @mentions from seeds', icon: '🦋' },
+  { id: 'rising_star', name: 'Rising Star', description: 'Reached 100 points', icon: '⭐' },
+  { id: 'point_collector', name: 'Point Collector', description: 'Reached 500 points', icon: '💰' },
+  { id: 'points_master', name: 'Points Master', description: 'Reached 1000 points', icon: '🏆' },
+  { id: 'legend', name: 'Legend', description: 'Reached 5000 points', icon: '👑' },
 ];
 
 class BadgeService {
@@ -29,11 +29,11 @@ class BadgeService {
       .select('badge_id, earned_at')
       .eq('user_id', userId);
 
-    const earnedIds = new Set(earned?.map(e => e.badge_id) || []);
+    const earnedIds = new Set(earned?.map((e: any) => e.badge_id) || []);
 
-    return BADGES.map(badge => ({
+    return BADGES.map((badge: any) => ({
       ...badge,
-      earnedAt: earned?.find(e => e.badge_id === badge.id)?.earned_at,
+      earnedAt: earned?.find((e: any) => e.badge_id === badge.id)?.earned_at,
     }));
   }
 
@@ -47,7 +47,7 @@ class BadgeService {
 
     if (existing) return false;
 
-    const badge = BADGES.find(b => b.id === badgeId);
+    const badge = BADGES.find((b: any) => b.id === badgeId);
     if (!badge) return false;
 
     const { error } = await supabase
@@ -63,7 +63,7 @@ class BadgeService {
     await supabase.from('notifications').insert({
       user_id: userId,
       type: 'badge_earned',
-      content: { text: `ðŸ† Badge Unlocked: ${badge.name}! ${badge.description}` },
+      content: { text: `🏆 Badge Unlocked: ${badge.name}! ${badge.description}` },
       created_at: new Date().toISOString(),
     });
 
@@ -87,3 +87,5 @@ class BadgeService {
 }
 
 export const badgeService = new BadgeService();
+
+

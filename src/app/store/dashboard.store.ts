@@ -206,7 +206,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
       if (error) throw error;
 
-      const todayEarnings = todayHistory?.reduce((sum, h) => sum + (h.amount_earned || 0), 0) || 0;
+      const todayEarnings = todayHistory?.reduce((sum: number, h: any) => sum + (h.amount_earned || 0), 0) || 0;
       const tracksListenedToday = todayHistory?.length || 0;
 
       set({ todayEarnings, tracksListenedToday });
@@ -232,7 +232,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
       if (error) throw error;
 
-      const weeklyEarnings = weeklyHistory?.reduce((sum, h) => sum + (h.amount_earned || 0), 0) || 0;
+      const weeklyEarnings = weeklyHistory?.reduce((sum: number, h: any) => sum + (h.amount_earned || 0), 0) || 0;
       const weeklyTracks = weeklyHistory?.length || 0;
 
       set({ weeklyEarnings, weeklyTracks });
@@ -267,7 +267,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
       if (error) throw error;
 
-      const tasks: Task[] = tasksData?.map(task => ({
+      const tasks: Task[] = tasksData?.map((task: any) => ({
         id: task.id,
         title: task.title,
         description: task.description,
@@ -298,7 +298,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
       if (error) throw error;
 
-      const trendingArtists: Artist[] = artistsData?.map(artist => ({
+      const trendingArtists: Artist[] = artistsData?.map((artist: any) => ({
         id: artist.id,
         name: artist.artist_name || artist.username,
         avatar: artist.avatar_url || 'https://via.placeholder.com/100',
@@ -347,7 +347,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       // (it can't statically guarantee a single related row), so we
       // index into it with [0] even though tracks_artist_id_fkey is
       // a many-to-one relationship that returns one artist per track.
-      const tracks: Track[] = tracksData?.map(track => ({
+      const tracks: Track[] = tracksData?.map((track: any) => ({
         id: track.id,
         title: track.title,
         artist: track.users?.[0]?.artist_name || track.users?.[0]?.display_name || track.users?.[0]?.username || 'Unknown Artist',
@@ -356,7 +356,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         cover: track.cover_url || 'https://via.placeholder.com/200',
         plays: track.plays || 0,
         earnings: track.earnings_per_play || 0.001,
-        liked: track.user_liked_tracks?.some(ult => ult.user_id === userId) || false
+        liked: track.user_liked_tracks?.some((ult: any) => ult.user_id === userId) || false
       })) || [];
 
       set({ tracks });
@@ -371,7 +371,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     if (!userId) return;
 
     try {
-      const task = tasks.find(t => t.id === taskId);
+      const task = tasks.find((t: any) => t.id === taskId);
       if (!task) return;
 
       const isCompleted = progress >= task.target_count;
@@ -391,7 +391,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
       // Update local state
       set(state => ({
-        tasks: state.tasks.map(t =>
+        tasks: state.tasks.map((t: any) =>
           t.id === taskId 
             ? { ...t, progress, is_completed: isCompleted }
             : t
@@ -421,7 +421,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     const { userId, tracks } = get();
     if (!userId) return;
 
-    const track = tracks.find(t => t.id === trackId);
+    const track = tracks.find((t: any) => t.id === trackId);
     if (!track) return;
 
     try {
@@ -443,7 +443,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         if (error) throw error;
         
         // Update task progress for "Like 5 songs" task
-        const likeTask = get().tasks.find(t => t.task_type === 'like');
+        const likeTask = get().tasks.find((t: any) => t.task_type === 'like');
         if (likeTask && !likeTask.is_completed) {
           await get().updateTaskProgress(likeTask.id, likeTask.progress + 1);
         }
@@ -451,7 +451,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
       // Update local state
       set(state => ({
-        tracks: state.tracks.map(t =>
+        tracks: state.tracks.map((t: any) =>
           t.id === trackId ? { ...t, liked: !t.liked } : t
         )
       }));
@@ -490,7 +490,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       });
 
       // Update task progress for listening tasks
-      const listenTask = get().tasks.find(t => t.task_type === 'listen');
+      const listenTask = get().tasks.find((t: any) => t.task_type === 'listen');
       if (listenTask && !listenTask.is_completed) {
         await get().updateTaskProgress(listenTask.id, listenTask.progress + 1);
       }
@@ -540,3 +540,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     });
   }
 }));
+
+
+
+

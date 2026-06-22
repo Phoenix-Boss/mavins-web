@@ -1,4 +1,4 @@
-﻿// src/services/gamification/tier.service.ts
+// src/services/gamification/tier.service.ts
 import { supabase } from '@/lib/supabase/client';
 
 export interface TierConfig {
@@ -44,7 +44,7 @@ class TierService {
       await supabase.from('notifications').insert({
         user_id: userId,
         type: 'tier_upgrade',
-        content: { text: `â¬†ï¸ Congratulations! You advanced to ${newTier} tier! ðŸš€` },
+        content: { text: `⬆️ Congratulations! You advanced to ${newTier} tier! 🚀` },
         created_at: new Date().toISOString(),
       });
 
@@ -67,7 +67,7 @@ class TierService {
       .eq('id', userId)
       .single();
 
-    const tier = TIERS.find(t => t.name === (data?.tier || 'T4'));
+    const tier = TIERS.find((t: any) => t.name === (data?.tier || 'T4'));
     return tier?.multiplier || 1.0;
   }
 
@@ -94,3 +94,4 @@ class TierService {
 }
 
 export const tierService = new TierService();
+

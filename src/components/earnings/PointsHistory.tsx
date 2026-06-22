@@ -1,4 +1,4 @@
-﻿// src/components/earnings/PointsHistory.tsx
+// src/components/earnings/PointsHistory.tsx
 'use client';
 
 import React from 'react';
@@ -33,7 +33,7 @@ export const PointsHistory = ({ entries }: PointsHistoryProps) => {
     <Card className="p-4">
       <h3 className="font-semibold mb-4">Points History</h3>
       <div className="space-y-3">
-        {entries.map((entry) => (
+        {entries.map((entry: any) => (
           <div key={entry.id} className="flex items-center justify-between py-2 border-b border-neutral-800 last:border-0">
             <div>
               <p className="font-medium">{entry.action}</p>
@@ -48,3 +48,4 @@ export const PointsHistory = ({ entries }: PointsHistoryProps) => {
     </Card>
   );
 };
+

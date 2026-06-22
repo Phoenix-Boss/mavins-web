@@ -51,7 +51,7 @@ export default function PromotePage() {
               { step: 2, title: "Set Budget", desc: "Choose how many playlists to target" },
               { step: 3, title: "Get Reviewed", desc: "Curators review & add to playlists" },
               { step: 4, title: "Earn Streams", desc: "Track performance in real-time" },
-            ].map((item) => (
+            ].map((item: any) => (
               <div key={item.step} className="text-center">
                 <div className={`w-10 h-10 mx-auto rounded-full ${theme.accentBg} text-white flex items-center justify-center font-bold mb-2`}>
                   {item.step}
@@ -243,3 +243,4 @@ export default function PromotePage() {
     </div>
   );
 }
+

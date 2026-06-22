@@ -211,7 +211,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           )}
 
           <nav className="flex-1 p-4 space-y-1">
-            {navItems.map((item) => (
+            {navItems.map((item: any) => (
               <Link
                 key={item.label}
                 href={item.href}
@@ -236,3 +236,4 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     </>
   );
 };
+

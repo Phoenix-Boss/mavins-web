@@ -1,4 +1,4 @@
-﻿// src/store/useAppStore.ts
+// src/store/useAppStore.ts
 'use client';
 
 import { create } from 'zustand';
@@ -141,7 +141,7 @@ export const useAppStore = create<AppState>()(
           .eq('user_id', userId)
           .order('create_time', { ascending: false });
         
-        const totalPoints = pointsData?.reduce((sum, record) => sum + (record.amount || 0), 0) || 0;
+        const totalPoints = pointsData?.reduce((sum: number, record: any) => sum + (record.amount || 0), 0) || 0;
         
         // Calculate tier based on points
         let tier = 'bronze';
@@ -269,7 +269,7 @@ export const useAppStore = create<AppState>()(
           .select('id, username')
           .in('id', senderIds);
         
-        const userMap = new Map(users?.map(u => [u.id, u.username]) || []);
+        const userMap = new Map(users?.map((u: any) => [u.id, u.username]) || []);
         
         const formattedMessages: ChatMessage[] = messages.map((m: any) => ({
           id: m.id,
@@ -285,7 +285,7 @@ export const useAppStore = create<AppState>()(
       updateTaskProgress: async (taskId: string, progress: number) => {
         const supabase = createClient();
         const { tasks } = get();
-        const task = tasks.find(t => t.id === taskId);
+        const task = tasks.find((t: any) => t.id === taskId);
         
         if (!task) return;
         
@@ -307,7 +307,7 @@ export const useAppStore = create<AppState>()(
         }
         
         set({
-          tasks: tasks.map(t =>
+          tasks: tasks.map((t: any) =>
             t.id === taskId
               ? { ...t, progress: newProgress, isCompleted, completedAt: isCompleted ? new Date() : t.completedAt }
               : t
@@ -318,7 +318,7 @@ export const useAppStore = create<AppState>()(
       completeTask: async (taskId: string) => {
         const supabase = createClient();
         const { tasks } = get();
-        const task = tasks.find(t => t.id === taskId);
+        const task = tasks.find((t: any) => t.id === taskId);
         
         if (!task || task.isCompleted) return;
         
@@ -336,7 +336,7 @@ export const useAppStore = create<AppState>()(
         }
         
         set({
-          tasks: tasks.map(t =>
+          tasks: tasks.map((t: any) =>
             t.id === taskId
               ? { ...t, isCompleted: true, completedAt: new Date() }
               : t
@@ -347,7 +347,7 @@ export const useAppStore = create<AppState>()(
       claimTaskReward: async (taskId: string) => {
         const supabase = createClient();
         const { tasks, user, addPoints } = get();
-        const task = tasks.find(t => t.id === taskId);
+        const task = tasks.find((t: any) => t.id === taskId);
         
         if (!task || !task.isCompleted || task.isClaimed || !user) return;
         
@@ -366,7 +366,7 @@ export const useAppStore = create<AppState>()(
         await addPoints(user.id, reward, `Task reward: ${task.title}`);
         
         set({
-          tasks: tasks.map(t =>
+          tasks: tasks.map((t: any) =>
             t.id === taskId
               ? { ...t, isClaimed: true }
               : t
@@ -389,7 +389,7 @@ export const useAppStore = create<AppState>()(
         }
         
         set({
-          notifications: notifications.map(n =>
+          notifications: notifications.map((n: any) =>
             n.id === notificationId
               ? { ...n, isRead: true }
               : n
@@ -440,3 +440,5 @@ export const useAppStore = create<AppState>()(
     }
   )
 );
+
+

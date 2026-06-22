@@ -1,4 +1,4 @@
-﻿// src/components/chat/ChatList.tsx
+// src/components/chat/ChatList.tsx
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -34,7 +34,7 @@ export const ChatList = ({ messages, currentUserId, isLoading = false }: ChatLis
   if (isLoading) {
     return (
       <div className="space-y-4 p-4">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map((i: any) => (
           <div key={i} className="flex gap-3 animate-pulse">
             <div className="w-10 h-10 rounded-full bg-neutral-700" />
             <div className="flex-1 space-y-2">
@@ -50,7 +50,7 @@ export const ChatList = ({ messages, currentUserId, isLoading = false }: ChatLis
   if (messages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="text-4xl mb-3">💬</div>
+        <div className="text-4xl mb-3">??</div>
         <p className={cn('text-sm', theme.textSecondary)}>No messages yet</p>
         <p className={cn('text-xs mt-1', theme.textMuted)}>Be the first to send a message!</p>
       </div>
@@ -59,7 +59,7 @@ export const ChatList = ({ messages, currentUserId, isLoading = false }: ChatLis
 
   return (
     <div className="flex flex-col space-y-3 p-4 max-h-[400px] overflow-y-auto custom-scrollbar">
-      {messages.map((message) => {
+      {messages.map((message: any) => {
         const isOwn = message.senderId === currentUserId;
         
         return (
@@ -100,3 +100,4 @@ export const ChatList = ({ messages, currentUserId, isLoading = false }: ChatLis
     </div>
   );
 };
+

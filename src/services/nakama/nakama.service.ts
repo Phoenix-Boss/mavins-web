@@ -128,10 +128,10 @@ class NakamaService {
       this.socket.onchannelpresence = (evt: ChannelPresenceEvent) => {
         const event: NakamaPresenceEvent = {
           channelId: evt.channel_id,
-          joins: evt.joins.map((p) => toNakamaPresence(p, 'online')),
-          leaves: evt.leaves.map((p) => toNakamaPresence(p, 'offline')),
+          joins: evt.joins.map((p: any) => toNakamaPresence(p, 'online')),
+          leaves: evt.leaves.map((p: any) => toNakamaPresence(p, 'offline')),
         };
-        this.presenceListeners.forEach((listener) => listener(event));
+        this.presenceListeners.forEach((listener: any) => listener(event));
       };
       this.socket.ondisconnect = () => {
         console.warn('⚠️ Nakama socket disconnected');
@@ -173,7 +173,7 @@ class NakamaService {
       id: channel.id,
       name: target,
       room: target,
-      presence: (channel.presences ?? []).map((p) => toNakamaPresence(p, 'online')),
+      presence: (channel.presences ?? []).map((p: any) => toNakamaPresence(p, 'online')),
     };
 
     return channel.id;
@@ -232,7 +232,7 @@ class NakamaService {
         username: msg.username ?? '',
         isTyping: !!content.isTyping,
       };
-      this.typingListeners.forEach((listener) => listener(event));
+      this.typingListeners.forEach((listener: any) => listener(event));
       return;
     }
 
@@ -250,7 +250,7 @@ class NakamaService {
       updateTime: msg.update_time ?? msg.create_time ?? '',
       persistent: msg.persistent ?? true,
     };
-    this.messageListeners.forEach((listener) => listener(message));
+    this.messageListeners.forEach((listener: any) => listener(message));
   }
 
   onMessage(listener: MessageListener): Unsubscribe {
@@ -387,3 +387,5 @@ class NakamaService {
 }
 
 export const nakamaService = NakamaService.getInstance();
+
+

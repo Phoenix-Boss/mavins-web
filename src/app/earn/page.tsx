@@ -10,7 +10,7 @@ export default function EarnPage() {
   const [points, setPoints] = useState(currentUser.balance);
   const [streak, setStreak] = useState(currentUser.streak);
   const [completedTasks, setCompletedTasks] = useState<number[]>(
-    dailyTasks.filter(task => task.completed).map(task => task.id)
+    dailyTasks.filter((task: any) => task.completed).map((task: any) => task.id)
   );
 
   const handleCompleteTask = (taskId: number, reward: number) => {
@@ -27,8 +27,8 @@ export default function EarnPage() {
 
   // Calculate total points earned today from completed tasks
   const todayEarnings = dailyTasks
-    .filter(task => completedTasks.includes(task.id))
-    .reduce((sum, task) => sum + task.reward, 0);
+    .filter((task: any) => completedTasks.includes(task.id))
+    .reduce((sum: number, task: any) => sum + task.reward, 0);
 
   // Calculate weekly earnings (approximate)
   const weeklyEarnings = Math.round(todayEarnings * 3.5);
@@ -80,7 +80,7 @@ export default function EarnPage() {
 
         {/* Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-2 border-b border-zinc-800">
-          {(['tasks', 'history', 'rules'] as const).map((tab) => (
+          {(['tasks', 'history', 'rules'] as const).map((tab: any) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -100,7 +100,7 @@ export default function EarnPage() {
           <section>
             <h2 className="text-xl font-bold mb-4">📋 Daily Tasks</h2>
             <div className="space-y-4">
-              {dailyTasks.map((task) => {
+              {dailyTasks.map((task: any) => {
                 const status = getTaskStatus(task.id);
                 const progressPercent = Math.round((task.progress / task.max) * 100);
                 const isCompleted = status === 'completed';
@@ -281,3 +281,7 @@ export default function EarnPage() {
     </div>
   );
 }
+
+
+
+

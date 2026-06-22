@@ -1,4 +1,4 @@
-﻿// src/components/leaderboard/LeaderboardTable.tsx
+// src/components/leaderboard/LeaderboardTable.tsx
 'use client';
 
 import React from 'react';
@@ -28,7 +28,7 @@ export const LeaderboardTable = ({ entries, title, isLoading = false }: Leaderbo
     return (
       <Card className="p-4">
         <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5].map((i: any) => (
             <div key={i} className="flex items-center gap-3 animate-pulse">
               <div className="w-8 h-8 bg-neutral-700 rounded-full"></div>
               <div className="flex-1 h-4 bg-neutral-700 rounded"></div>
@@ -41,9 +41,9 @@ export const LeaderboardTable = ({ entries, title, isLoading = false }: Leaderbo
   }
 
   const getRankBadge = (rank: number) => {
-    if (rank === 1) return 'ðŸ¥‡';
-    if (rank === 2) return 'ðŸ¥ˆ';
-    if (rank === 3) return 'ðŸ¥‰';
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    if (rank === 3) return '🥉';
     return '#' + rank;
   };
 
@@ -55,7 +55,7 @@ export const LeaderboardTable = ({ entries, title, isLoading = false }: Leaderbo
         </div>
       )}
       <div className="divide-y divide-neutral-800">
-        {entries.map((entry) => (
+        {entries.map((entry: any) => (
           <div
             key={entry.userId}
             className={cn(
@@ -85,3 +85,5 @@ export const LeaderboardTable = ({ entries, title, isLoading = false }: Leaderbo
     </Card>
   );
 };
+
+

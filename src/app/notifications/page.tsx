@@ -8,7 +8,7 @@ export default function NotificationsPage() {
   const { theme } = useTheme();
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
-  const filtered = filter === 'unread' ? notifications.filter(n => !n.read) : notifications;
+  const filtered = filter === 'unread' ? notifications.filter((n: any) => !n.read) : notifications;
 
   return (
     <div className={`flex-1 ${theme.bg} ${theme.text} overflow-y-auto pb-24 md:pb-20 p-4 md:p-6`}>
@@ -26,7 +26,7 @@ export default function NotificationsPage() {
 
         {/* Filter */}
         <div className="flex gap-2">
-          {(['all', 'unread'] as const).map((f) => (
+          {(['all', 'unread'] as const).map((f: any) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -37,7 +37,7 @@ export default function NotificationsPage() {
               }`}
             >
               {f === 'all' ? 'All' : 'Unread'}
-              {f === 'unread' && <span className="ml-1 px-1.5 py-0.5 text-xs bg-red-500 rounded-full">{notifications.filter(n => !n.read).length}</span>}
+              {f === 'unread' && <span className="ml-1 px-1.5 py-0.5 text-xs bg-red-500 rounded-full">{notifications.filter((n: any) => !n.read).length}</span>}
             </button>
           ))}
         </div>
@@ -50,7 +50,7 @@ export default function NotificationsPage() {
               <p className="mt-1">No new notifications</p>
             </div>
           ) : (
-            filtered.map((notif) => (
+            filtered.map((notif: any) => (
               <div
                 key={notif.id}
                 className={`p-4 rounded-xl ${theme.bgCard} ${theme.border} border ${!notif.read ? `border-l-4 border-l-amber-500 ${theme.border}` : ''} hover:${theme.cardHover} transition-all cursor-pointer`}
@@ -110,3 +110,5 @@ export default function NotificationsPage() {
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-﻿// src/hooks/auth/useAuth.ts
+// src/hooks/auth/useAuth.ts
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -60,7 +60,7 @@ export function useAuth(): UseAuthReturn {
       .eq('user_id', userId)
       .order('create_time', { ascending: false });
 
-    const totalPoints = pointsData?.reduce((sum, record) => sum + (record.amount || 0), 0) || 0;
+    const totalPoints = pointsData?.reduce((sum: number, record: any) => sum + (record.amount || 0), 0) || 0;
 
     let tier: AuthUser['tier'] = 'bronze';
     if (totalPoints >= 10000) tier = 'platinum';
@@ -101,7 +101,7 @@ export function useAuth(): UseAuthReturn {
 
     initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: any, newSession: any) => {
       setSession(newSession);
       
       if (newSession?.user) {
@@ -245,7 +245,7 @@ export function useAuth(): UseAuthReturn {
       if (error) throw error;
 
       setUserState({ ...user, isActive: true });
-      showToast('Account activated! Welcome! 🎵', 'success');
+      showToast('Account activated! Welcome! ??', 'success');
       await updateUserPoints(500);
       
       return true;
@@ -317,7 +317,7 @@ export function useAuth(): UseAuthReturn {
       setUserState(updatedUser);
       
       if (newStreak === 7 || newStreak === 30 || newStreak === 100) {
-        showToast(`🔥 ${newStreak} day streak! You're on fire!`, 'success');
+        showToast(`?? ${newStreak} day streak! You're on fire!`, 'success');
       }
     } catch (error: any) {
       console.error('Failed to update streak:', error);
@@ -338,3 +338,4 @@ export function useAuth(): UseAuthReturn {
     updateUserStreak,
   };
 }
+

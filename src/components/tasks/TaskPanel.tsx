@@ -1,4 +1,4 @@
-﻿// src/components/tasks/TaskPanel.tsx
+// src/components/tasks/TaskPanel.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -128,10 +128,10 @@ export const TaskPanel = ({
 
   if (!isOpen) return null;
 
-  const incompleteCount = tasks.filter((t) => !t.isCompleted).length;
+  const incompleteCount = tasks.filter((t: any) => !t.isCompleted).length;
   const totalPointsAvailable = tasks
-    .filter((t) => t.isCompleted && !t.isClaimed)
-    .reduce((sum, t) => sum + t.points, 0);
+    .filter((t: any) => t.isCompleted && !t.isClaimed)
+    .reduce((sum: number, t: any) => sum + t.points, 0);
 
   return (
     <>
@@ -169,7 +169,7 @@ export const TaskPanel = ({
             <div className="p-4 bg-amber-500/10 border-b border-amber-500/20">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-amber-400 text-lg">💰</span>
+                  <span className="text-amber-400 text-lg">??</span>
                   <span className="text-sm font-medium">Pending Rewards</span>
                 </div>
                 <span className="text-amber-400 font-bold">{totalPointsAvailable} pts</span>
@@ -187,7 +187,7 @@ export const TaskPanel = ({
                 No tasks available. Check back tomorrow!
               </div>
             ) : (
-              tasks.map((task) => (
+              tasks.map((task: any) => (
                 <TaskCard
                   key={task.id}
                   id={task.id}
@@ -216,3 +216,5 @@ export const TaskPanel = ({
     </>
   );
 };
+
+

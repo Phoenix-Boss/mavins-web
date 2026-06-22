@@ -32,7 +32,7 @@ class ClickBatcher {
 
   // Get total clicks in the batch
   private getTotalClicks(): number {
-    return Object.values(this.batch).reduce((sum, count) => sum + count, 0);
+    return Object.values(this.batch).reduce((sum: number, count: number) => sum + count, 0);
   }
 
   // Flush the batch to database
@@ -96,7 +96,7 @@ class ClickBatcher {
 
   // Helper to get total clicks from a batch
   private getTotalClicksFromBatch(batch: ClickBatch): number {
-    return Object.values(batch).reduce((sum, count) => sum + count, 0);
+    return Object.values(batch).reduce((sum: number, count: number) => sum + count, 0);
   }
 
   // Merge a batch back into the current batch (on error recovery)

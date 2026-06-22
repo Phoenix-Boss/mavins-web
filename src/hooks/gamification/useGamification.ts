@@ -50,7 +50,7 @@ export const useGamification = () => {
     if (!user) return null;
     const updatedTask = await tasksService.updateTaskProgress(user.id, taskId, increment);
     if (updatedTask) {
-      setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+      setTasks(prev => prev.map((t: any) => t.id === updatedTask.id ? updatedTask : t));
       // updateUserPoints expects a delta, not the new absolute total — task completion
       // doesn't award points until claimed, so we don't call it here.
     }
@@ -59,7 +59,7 @@ export const useGamification = () => {
 
   const claimTask = useCallback(async (taskId: string) => {
     if (!user) return false;
-    const task = tasks.find(t => t.id === taskId);
+    const task = tasks.find((t: any) => t.id === taskId);
     const success = await tasksService.claimTaskReward(user.id, taskId);
     if (success) {
       await loadAllData();
@@ -90,7 +90,7 @@ export const useGamification = () => {
   }, [user, loadAllData]);
 
   const getTaskById = useCallback((taskId: string) => {
-    return tasks.find(t => t.taskId === taskId);
+    return tasks.find((t: any) => t.taskId === taskId);
   }, [tasks]);
 
   const getTodayProgress = useCallback(async () => {
@@ -113,3 +113,5 @@ export const useGamification = () => {
     reload: loadAllData,
   };
 };
+
+

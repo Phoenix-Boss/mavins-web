@@ -1,4 +1,4 @@
-﻿// src/components/layout/MobileNav.tsx
+// src/components/layout/MobileNav.tsx
 'use client';
 
 import React from 'react';
@@ -14,11 +14,11 @@ interface MobileNavProps {
 }
 
 const tabs = [
-  { id: 'home', icon: '🏠', label: 'Home' },
-  { id: 'search', icon: '🔍', label: 'Search' },
-  { id: 'tasks', icon: '📋', label: 'Tasks', hasBadge: 'task' },
-  { id: 'notifications', icon: '🔔', label: 'Alerts', hasBadge: 'notification' },
-  { id: 'profile', icon: '👤', label: 'Profile' },
+  { id: 'home', icon: '??', label: 'Home' },
+  { id: 'search', icon: '??', label: 'Search' },
+  { id: 'tasks', icon: '??', label: 'Tasks', hasBadge: 'task' },
+  { id: 'notifications', icon: '??', label: 'Alerts', hasBadge: 'notification' },
+  { id: 'profile', icon: '??', label: 'Profile' },
 ];
 
 export const MobileNav = ({ 
@@ -42,14 +42,14 @@ export const MobileNav = ({
         {/* Points display on mobile - changed to currency icon */}
         <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 backdrop-blur-sm">
           <div className="flex items-center gap-1">
-            <span className="text-amber-400 text-xs">💰</span>
+            <span className="text-amber-400 text-xs">??</span>
             <span className={cn('font-semibold text-xs', theme.text)}>
               {points.toLocaleString()}
             </span>
           </div>
         </div>
 
-        {tabs.map((tab) => {
+        {tabs.map((tab: any) => {
           let badgeCount = 0;
           if (tab.hasBadge === 'task') badgeCount = taskCount;
           if (tab.hasBadge === 'notification') badgeCount = notificationCount;

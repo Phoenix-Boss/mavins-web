@@ -116,7 +116,7 @@ class WithdrawalService {
 
       // rankData?.findIndex(...) returns undefined when rankData is null/undefined,
       // making undefined + 1 = NaN. ?? -1 gives a safe fallback so not-found → 0.
-      const rank = ((rankData?.findIndex(r => r.owner_id === userId) ?? -1) + 1) || 0;
+      const rank = ((rankData?.findIndex((r: any) => r.owner_id === userId) ?? -1) + 1) || 0;
 
       const { data: weeklyData } = await supabase
         .from('points_history')
@@ -124,7 +124,7 @@ class WithdrawalService {
         .eq('user_id', userId)
         .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
-      const weeklyPoints = weeklyData?.reduce((sum, p) => sum + p.amount, 0) || 0;
+      const weeklyPoints = weeklyData?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
 
       const { data: monthlyData } = await supabase
         .from('points_history')
@@ -132,7 +132,7 @@ class WithdrawalService {
         .eq('user_id', userId)
         .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
 
-      const monthlyPoints = monthlyData?.reduce((sum, p) => sum + p.amount, 0) || 0;
+      const monthlyPoints = monthlyData?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
 
       const pointsMultiplier = 100;
       const totalEarned = (user?.points || 0) / pointsMultiplier;
@@ -193,3 +193,5 @@ class WithdrawalService {
 }
 
 export const withdrawalService = new WithdrawalService();
+
+

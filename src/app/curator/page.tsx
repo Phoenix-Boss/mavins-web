@@ -10,12 +10,12 @@ export default function CuratorPage() {
   const [filter, setFilter] = useState<'all' | 'pending' | 'reviewed'>('all');
 
   const handleReview = (id: number, action: 'accept' | 'reject') => {
-    setRequests(prev => prev.map(req => 
+    setRequests(prev => prev.map((req: any) => 
       req.id === id ? { ...req, status: action === 'accept' ? 'accepted' : 'rejected' } : req
     ));
   };
 
-  const filteredRequests = requests.filter(req => {
+  const filteredRequests = requests.filter((req: any) => {
     if (filter === 'all') return true;
     if (filter === 'pending') return req.status === 'pending';
     if (filter === 'reviewed') return req.status !== 'pending';
@@ -62,7 +62,7 @@ export default function CuratorPage() {
 
         {/* Filter Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-2">
-          {(['all', 'pending', 'reviewed'] as const).map((f) => (
+          {(['all', 'pending', 'reviewed'] as const).map((f: any) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -73,7 +73,7 @@ export default function CuratorPage() {
               }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
-              {f === 'pending' && <span className="ml-1 px-1.5 py-0.5 text-xs bg-red-500 rounded-full">{requests.filter(r => r.status === 'pending').length}</span>}
+              {f === 'pending' && <span className="ml-1 px-1.5 py-0.5 text-xs bg-red-500 rounded-full">{requests.filter((r: any) => r.status === 'pending').length}</span>}
             </button>
           ))}
         </div>
@@ -88,7 +88,7 @@ export default function CuratorPage() {
                 <p className="mt-1">No pending submissions. Check back later.</p>
               </div>
             ) : (
-              filteredRequests.map((req) => (
+              filteredRequests.map((req: any) => (
                 <div key={req.id} className={`p-4 md:p-5 rounded-2xl ${theme.bgCard} ${theme.border} border`}>
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     {/* Track Info */}
@@ -190,3 +190,5 @@ export default function CuratorPage() {
     </div>
   );
 }
+
+

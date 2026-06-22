@@ -77,11 +77,11 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIncompleteTasksCount(tasks.filter(t => !t.isCompleted).length);
+    setIncompleteTasksCount(tasks.filter((t: any) => !t.isCompleted).length);
   }, [tasks]);
 
   useEffect(() => {
-    setUnreadNotificationsCount(notifications.filter(n => !n.isRead).length);
+    setUnreadNotificationsCount(notifications.filter((n: any) => !n.isRead).length);
   }, [notifications]);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export default function HomePage() {
         .eq('id', trackId);
     }
 
-    const listenTasks = tasks.filter(t => 
+    const listenTasks = tasks.filter((t: any) => 
       t.type === 'listen' && !t.isCompleted
     );
     
@@ -293,14 +293,14 @@ export default function HomePage() {
   };
 
   const handleTaskPlay = async (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
+    const task = tasks.find((t: any) => t.id === taskId);
     if (task && task.targetId) {
       await handleSongClick(task.targetId);
     }
   };
 
   const handleTaskClaim = async (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
+    const task = tasks.find((t: any) => t.id === taskId);
     if (!task || !task.isCompleted || task.isClaimed) return;
 
     const reward = task.points;
@@ -331,7 +331,7 @@ export default function HomePage() {
         is_read: false
       });
 
-    setTasks(tasks.map(t => 
+    setTasks(tasks.map((t: any) => 
       t.id === taskId ? { ...t, isClaimed: true } : t
     ));
   };
@@ -361,7 +361,7 @@ export default function HomePage() {
       .update({ is_read: true })
       .eq('id', notificationId);
 
-    setNotifications(notifications.map(n => 
+    setNotifications(notifications.map((n: any) => 
       n.id === notificationId ? { ...n, isRead: true } : n
     ));
   };
@@ -375,7 +375,7 @@ export default function HomePage() {
       .eq('user_id', user.id)
       .eq('is_read', false);
 
-    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    setNotifications(notifications.map((n: any) => ({ ...n, isRead: true })));
   };
 
   if (isLoading || isDataLoading) {
@@ -502,5 +502,8 @@ export default function HomePage() {
     </div>
   );
 }
+
+
+
 
 

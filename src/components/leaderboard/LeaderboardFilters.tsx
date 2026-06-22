@@ -29,7 +29,7 @@ export function LeaderboardFilters({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        {filters.map((filter) => (
+        {filters.map((filter: any) => (
           <button
             key={filter.id}
             onClick={() => onFilterChange(filter.id)}
@@ -47,7 +47,7 @@ export function LeaderboardFilters({
       
       {activeFilter === 'tier' && onTierChange && (
         <div className="flex flex-wrap gap-2">
-          {tiers.map((tier) => (
+          {tiers.map((tier: any) => (
             <button
               key={tier}
               onClick={() => onTierChange(tier)}
@@ -66,3 +66,4 @@ export function LeaderboardFilters({
     </div>
   );
 }
+

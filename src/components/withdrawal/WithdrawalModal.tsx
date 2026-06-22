@@ -1,4 +1,4 @@
-﻿// src/components/withdrawal/WithdrawalModal.tsx
+// src/components/withdrawal/WithdrawalModal.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -74,7 +74,7 @@ export const WithdrawalModal = ({ isOpen, onClose, availableAmount, onSubmit, is
         <div>
           <label className={cn('text-sm font-medium block mb-2', theme.text)}>Withdrawal Method</label>
           <div className="grid grid-cols-3 gap-2">
-            {(['paypal', 'bank', 'crypto'] as const).map((m) => (
+            {(['paypal', 'bank', 'crypto'] as const).map((m: any) => (
               <button
                 key={m}
                 onClick={() => setMethod(m)}
@@ -175,3 +175,5 @@ export const WithdrawalModal = ({ isOpen, onClose, availableAmount, onSubmit, is
     </Modal>
   );
 };
+
+

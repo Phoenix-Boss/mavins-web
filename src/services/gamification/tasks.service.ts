@@ -174,11 +174,13 @@ class TasksService {
 
   async getTodayProgress(userId: string): Promise<{ completed: number; total: number; totalPoints: number }> {
     const tasks = await this.getUserTasks(userId);
-    const completed = tasks.filter(t => t.isCompleted && t.isClaimed).length;
+    const completed = tasks.filter((t: any) => t.isCompleted && t.isClaimed).length;
     const total = tasks.length;
-    const totalPoints = tasks.reduce((sum, t) => sum + (t.isClaimed ? (t.task?.rewardPoints || 0) : 0), 0);
+    const totalPoints = tasks.reduce((sum: number, t: any) => sum + (t.isClaimed ? (t.task?.rewardPoints || 0) : 0), 0);
     return { completed, total, totalPoints };
   }
 }
 
 export const tasksService = new TasksService();
+
+

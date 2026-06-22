@@ -49,7 +49,7 @@ export const WithdrawalHistory = ({ withdrawals }: WithdrawalHistoryProps) => {
         <h3 className="font-semibold">Withdrawal History</h3>
       </div>
       <div className="divide-y divide-neutral-800">
-        {withdrawals.map((w) => (
+        {withdrawals.map((w: any) => (
           <div key={w.id} className="p-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
@@ -72,5 +72,6 @@ export const WithdrawalHistory = ({ withdrawals }: WithdrawalHistoryProps) => {
     </Card>
   );
 };
+
 
 
