@@ -22,7 +22,7 @@ export const SettingsTabs = ({ activeTab, onTabChange }: SettingsTabsProps) => {
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          onClick={() => onTabChange(tab.id as any)}
+          onClick={() => onTabChange(tab.id)}
           className={cn(
             'flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap',
             activeTab === tab.id
@@ -36,4 +36,5 @@ export const SettingsTabs = ({ activeTab, onTabChange }: SettingsTabsProps) => {
     </div>
   );
 };
+
 

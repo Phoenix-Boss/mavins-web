@@ -27,7 +27,7 @@ export const LeaderboardFilters = ({ activeFilter, onFilterChange, selectedTier 
         {filters.map((filter) => (
           <button
             key={filter.id}
-            onClick={() => onFilterChange(filter.id as any)}
+            onClick={() => onFilterChange(filter.id)}
             className={cn(
               'px-4 py-2 rounded-xl text-sm font-medium transition-all',
               activeFilter === filter.id
@@ -60,4 +60,5 @@ export const LeaderboardFilters = ({ activeFilter, onFilterChange, selectedTier 
     </div>
   );
 };
+
 
