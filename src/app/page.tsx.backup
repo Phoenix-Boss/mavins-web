@@ -120,7 +120,11 @@ export default function HomePage() {
           table: 'pool_mood_state',
           filter: 'pool_id=eq.default'
         },
-payload: { new: { mood_state: string; mood_score: number } }) => {
+<<<<<<< HEAD
+        (payload) => {
+=======
+        (payload: { new: { mood_state: string; mood_score: number } }) => {
+>>>>>>> 19e61ac3a4ccfbdd60b5ffa9c4ef589a08b14021
           const newState = payload.new;
           setPoolMood(prev => ({
             ...prev,
@@ -502,4 +506,3 @@ payload: { new: { mood_state: string; mood_score: number } }) => {
     </div>
   );
 }
-
