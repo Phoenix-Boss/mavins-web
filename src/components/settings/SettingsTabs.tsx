@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils/cn';
 
 interface SettingsTabsProps {
   activeTab: 'profile' | 'notifications' | 'privacy' | 'appearance';
-  onTabChange: (tab: 'profile' | 'notifications' | 'privacy' | 'appearance') => void;
+  onTabChange: (tab: string) => void;
 }
 
 const tabs = [
@@ -36,6 +36,7 @@ export const SettingsTabs = ({ activeTab, onTabChange }: SettingsTabsProps) => {
     </div>
   );
 };
+
 
 
 
