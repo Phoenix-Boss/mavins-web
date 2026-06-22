@@ -1,4 +1,4 @@
-﻿// src/components/settings/SettingsTabs.tsx
+// src/components/settings/SettingsTabs.tsx
 'use client';
 
 import React from 'react';
@@ -36,3 +36,4 @@ export const SettingsTabs = ({ activeTab, onTabChange }: SettingsTabsProps) => {
     </div>
   );
 };
+

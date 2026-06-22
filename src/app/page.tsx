@@ -121,7 +121,7 @@ export default function HomePage() {
           filter: 'pool_id=eq.default'
         },
         (payload) => {
-          const newState = payload.new as any;
+          const newState = payload.new;
           setPoolMood(prev => ({
             ...prev,
             state: newState.mood_state,

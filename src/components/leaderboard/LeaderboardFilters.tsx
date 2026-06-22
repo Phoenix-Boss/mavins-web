@@ -1,4 +1,4 @@
-﻿// src/components/leaderboard/LeaderboardFilters.tsx
+// src/components/leaderboard/LeaderboardFilters.tsx
 'use client';
 
 import React from 'react';
@@ -60,3 +60,4 @@ export const LeaderboardFilters = ({ activeFilter, onFilterChange, selectedTier 
     </div>
   );
 };
+

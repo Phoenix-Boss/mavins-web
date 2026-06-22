@@ -1,4 +1,4 @@
-﻿// src/components/notifications/NotificationPanel.tsx
+// src/components/notifications/NotificationPanel.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -62,8 +62,8 @@ export const NotificationPanel = ({
           table: 'notification',
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          const newNotification = payload.new as any;
+        (payload: any) => {
+          const newNotification = payload.new;
           // This will trigger a refresh via the parent component
           setIsRefreshing(true);
           setTimeout(() => setIsRefreshing(false), 500);
@@ -91,11 +91,11 @@ export const NotificationPanel = ({
   };
 
   const getNotificationIcon = (title: string) => {
-    if (title.toLowerCase().includes('task')) return '📋';
-    if (title.toLowerCase().includes('reward') || title.toLowerCase().includes('point')) return '💰';
-    if (title.toLowerCase().includes('streak')) return '🔥';
-    if (title.toLowerCase().includes('welcome')) return '🎉';
-    return '🔔';
+    if (title.toLowerCase().includes('task')) return '??';
+    if (title.toLowerCase().includes('reward') || title.toLowerCase().includes('point')) return '??';
+    if (title.toLowerCase().includes('streak')) return '??';
+    if (title.toLowerCase().includes('welcome')) return '??';
+    return '??';
   };
 
   if (!isOpen) return null;
@@ -144,7 +144,7 @@ export const NotificationPanel = ({
               </div>
             ) : notifications.length === 0 ? (
               <div className={cn('text-center py-12', theme.textSecondary)}>
-                <div className="text-4xl mb-3">🔔</div>
+                <div className="text-4xl mb-3">??</div>
                 <p>No notifications yet</p>
                 <p className="text-sm mt-1">When you receive notifications, they will appear here</p>
               </div>

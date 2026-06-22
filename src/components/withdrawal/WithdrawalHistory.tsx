@@ -1,4 +1,4 @@
-﻿// src/components/withdrawal/WithdrawalHistory.tsx
+// src/components/withdrawal/WithdrawalHistory.tsx
 'use client';
 
 import React from 'react';
@@ -36,7 +36,7 @@ export const WithdrawalHistory = ({ withdrawals }: WithdrawalHistoryProps) => {
   if (withdrawals.length === 0) {
     return (
       <Card className="p-8 text-center">
-        <span className="text-4xl mb-2 block">ðŸ’¸</span>
+        <span className="text-4xl mb-2 block">💸</span>
         <p className={cn('text-sm', theme.textSecondary)}>No withdrawal requests yet</p>
         <p className={cn('text-xs mt-1', theme.textMuted)}>Your withdrawal history will appear here</p>
       </Card>
@@ -55,12 +55,12 @@ export const WithdrawalHistory = ({ withdrawals }: WithdrawalHistoryProps) => {
               <div>
                 <p className="font-medium">${w.amount.toFixed(2)}</p>
                 <p className={cn('text-xs', theme.textSecondary)}>
-                  {w.method.charAt(0).toUpperCase() + w.method.slice(1)} â€¢ {w.pointsAmount.toLocaleString()} points
+                  {w.method.charAt(0).toUpperCase() + w.method.slice(1)} • {w.pointsAmount.toLocaleString()} points
                 </p>
                 <p className="text-xs text-neutral-500 mt-1">{new Date(w.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="text-right">
-                <Badge variant={statusConfig[w.status].color as any} size="sm">
+                <Badge variant={statusConfig[w.status].color} size="sm">
                   {statusConfig[w.status].label}
                 </Badge>
                 {w.message && <p className={cn('text-xs mt-2 max-w-[200px]', theme.textMuted)}>{w.message}</p>}
@@ -72,3 +72,4 @@ export const WithdrawalHistory = ({ withdrawals }: WithdrawalHistoryProps) => {
     </Card>
   );
 };
+

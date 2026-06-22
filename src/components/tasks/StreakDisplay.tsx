@@ -1,4 +1,4 @@
-﻿// src/components/tasks/StreakDisplay.tsx
+// src/components/tasks/StreakDisplay.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -57,8 +57,8 @@ export const StreakDisplay = ({ streak }: StreakDisplayProps) => {
           table: 'users',
           filter: `id=eq.${user.id}`,
         },
-        (payload) => {
-          const newStreak = (payload.new as any).streak;
+        (payload: any) => {
+          const newStreak = payload.new?.streak;
           if (newStreak !== streak) {
             setAnimate(true);
           }
@@ -79,7 +79,7 @@ export const StreakDisplay = ({ streak }: StreakDisplayProps) => {
             'w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-2xl transition-all duration-300',
             animate && 'scale-125 rotate-12'
           )}>
-            🔥
+            ??
           </div>
           <div>
             <p className={cn('text-xs', theme.textSecondary)}>Current Streak</p>
