@@ -1,4 +1,4 @@
-﻿// src/hooks/gamification/useGamification.ts
+// src/hooks/gamification/useGamification.ts
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -12,7 +12,7 @@ import type { DailyTask, UserTask } from '@/services/gamification/tasks.service'
 import type { Badge } from '@/services/gamification/badge.service';
 
 export const useGamification = () => {
-  const { user, updatePoints, updateStreak } = useAuth();
+  const { user, updateUserPoints, updateUserStreak } = useAuth();
   const [tasks, setTasks] = useState<UserTask[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [pointsHistory, setPointsHistory] = useState<any[]>([]);
@@ -51,31 +51,34 @@ export const useGamification = () => {
     const updatedTask = await tasksService.updateTaskProgress(user.id, taskId, increment);
     if (updatedTask) {
       setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
-      if (updatedTask.is_completed && !updatedTask.is_claimed) {
-        const freshPoints = await pointsService.getUserPoints(user.id);
-        updatePoints(freshPoints);
-      }
+      // updateUserPoints expects a delta, not the new absolute total — task completion
+      // doesn't award points until claimed, so we don't call it here.
     }
     return updatedTask;
-  }, [user, updatePoints]);
+  }, [user]);
 
   const claimTask = useCallback(async (taskId: string) => {
     if (!user) return false;
+    const task = tasks.find(t => t.id === taskId);
     const success = await tasksService.claimTaskReward(user.id, taskId);
     if (success) {
       await loadAllData();
-      const freshPoints = await pointsService.getUserPoints(user.id);
-      updatePoints(freshPoints);
+      // updateUserPoints adds this amount to the user's current points (delta, not total).
+      // Reward amount lives on the nested DailyTask (UserTask.task.rewardPoints).
+      if (task?.task) {
+        await updateUserPoints(task.task.rewardPoints ?? 0);
+      }
     }
     return success;
-  }, [user, loadAllData, updatePoints]);
+  }, [user, tasks, loadAllData, updateUserPoints]);
 
   const refreshStreak = useCallback(async () => {
     if (!user) return 0;
-    const newStreak = await streakService.updateStreak(user.id);
-    updateStreak(newStreak);
-    return newStreak;
-  }, [user, updateStreak]);
+    // updateUserStreak computes and persists the new streak internally
+    // from user.lastLoginAt; it takes no arguments and returns void.
+    await updateUserStreak();
+    return user.streak;
+  }, [user, updateUserStreak]);
 
   const refreshTier = useCallback(async () => {
     if (!user) return 'T4';
@@ -87,7 +90,7 @@ export const useGamification = () => {
   }, [user, loadAllData]);
 
   const getTaskById = useCallback((taskId: string) => {
-    return tasks.find(t => t.task_id === taskId);
+    return tasks.find(t => t.taskId === taskId);
   }, [tasks]);
 
   const getTodayProgress = useCallback(async () => {

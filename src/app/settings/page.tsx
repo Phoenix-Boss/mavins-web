@@ -1,7 +1,8 @@
-﻿// src/app/settings/page.tsx
+// src/app/settings/page.tsx
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -16,17 +17,42 @@ import { Button } from '@/components/ui/Button';
 
 export default function SettingsPage() {
   const { theme } = useTheme();
-  const { user, setIsSidebarOpen, setIsTaskPanelOpen, setIsNotificationPanelOpen } = useAppStore();
+  const router = useRouter();
+  const {
+    user,
+    tasks,
+    notifications,
+    points,
+    setIsSidebarOpen,
+    setIsTaskPanelOpen,
+    setIsNotificationPanelOpen,
+  } = useAppStore();
   const [isSidebarOpen, setIsSidebarOpenState] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'privacy' | 'appearance'>('appearance');
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
+  const incompleteTasksCount = tasks.filter(t => !t.isCompleted).length;
+  const unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
+
   return (
     <div className={cn('min-h-screen pb-16 md:pb-0', theme.bg)}>
-      <Header onMenuClick={() => setIsSidebarOpenState(true)} onTaskClick={() => setIsTaskPanelOpen(true)} onNotificationClick={() => setIsNotificationPanelOpen(true)} />
+      <Header
+        onMenuClick={() => setIsSidebarOpenState(true)}
+        onTaskClick={() => setIsTaskPanelOpen(true)}
+        onNotificationClick={() => setIsNotificationPanelOpen(true)}
+        taskCount={incompleteTasksCount}
+        notificationCount={unreadNotificationsCount}
+        points={points}
+      />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
-      <MobileNav activeTab="settings" />
+      <MobileNav
+        activeTab="settings"
+        taskCount={incompleteTasksCount}
+        notificationCount={unreadNotificationsCount}
+        points={points}
+        onTabChange={(tab) => router.push(tab === 'home' ? '/' : `/${tab}`)}
+      />
 
       <main className="pt-24 pb-8">
         <Container>

@@ -313,17 +313,18 @@ export function useDemoData() {
         },
         (payload) => {
           const newNotification = payload.new as any;
-          setNotifications(prev => [
-            {
-              id: newNotification.id,
-              userId: newNotification.user_id,
-              title: newNotification.title || 'Notification',
-              message: newNotification.message,
-              isRead: newNotification.is_read,
-              createTime: new Date(newNotification.create_time)
-            },
-            ...prev
-          ]);
+          const formattedNotification = {
+            id: newNotification.id,
+            userId: newNotification.user_id,
+            title: newNotification.title || 'Notification',
+            message: newNotification.message,
+            isRead: newNotification.is_read,
+            createTime: new Date(newNotification.create_time)
+          };
+          // setNotifications takes a value, not a React-style (prev) => next updater,
+          // so we read the freshest array straight off the store rather than closing
+          // over `notifications` from this effect's original render.
+          setNotifications([formattedNotification, ...useAppStore.getState().notifications]);
         }
       )
       .subscribe();
@@ -396,7 +397,7 @@ export function useDemoData() {
             username: sender?.username || 'Anonymous'
           };
 
-          setChatMessages((prev) => [...prev, formattedMessage]);
+          setChatMessages([...useAppStore.getState().chatMessages, formattedMessage]);
         }
       )
       .subscribe();

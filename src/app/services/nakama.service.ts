@@ -5,16 +5,15 @@ class NakamaService {
   private client: Client;
   private session: Session | null = null;
   private static instance: NakamaService;
-  private useProxy: boolean = false; // Set to false since CORS might be working
 
   private constructor() {
     const host = 'nakama-mmpb.onrender.com';
     const port = 443;
     const ssl = true;
     const serverKey = 'defaultkey';
-    
+
     console.log('🔧 Creating Nakama client with:', { host, port, ssl });
-    this.client = new Client(serverKey, host, port, ssl);
+    this.client = new Client(serverKey, host, port.toString(), ssl);
   }
 
   static getInstance(): NakamaService {
@@ -27,24 +26,26 @@ class NakamaService {
   async authenticate(userId: string, username?: string): Promise<Session> {
     try {
       console.log('🔐 Authenticating with Nakama...', { userId, username });
-      
-      // Try authentication with custom ID
-      this.session = await this.client.authenticateCustom(userId, username || userId, true);
-      
-      // Store session
+
+      this.session = await this.client.authenticateCustom(
+        userId,
+        true,
+        username || userId
+      );
+
       if (typeof window !== 'undefined' && this.session) {
         localStorage.setItem('nakama_session', JSON.stringify({
           token: this.session.token,
-          refreshToken: this.session.refreshToken,
-          userId: this.session.userId,
+          refreshToken: this.session.refresh_token,
+          userId: this.session.user_id,
           username: this.session.username,
-          expiresAt: this.session.expiresAt
+          expiresAt: this.session.expires_at
         }));
       }
-      
+
       console.log('✅ Authentication successful!');
       return this.session;
-      
+
     } catch (error) {
       console.error('❌ Nakama authentication failed:', error);
       throw error;
@@ -53,30 +54,49 @@ class NakamaService {
 
   async getLeaderboard(leaderboardId: string, limit: number = 10) {
     if (!this.session) throw new Error('Not authenticated');
-    
+
     try {
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
-        '',
-        limit
+        [],   // ownerIds - empty array for all records
+        limit,
+        ''    // cursor - empty string for first page
       );
-      return result.records;
+      return result.records || [];
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
       return [];
     }
   }
 
-  async submitScore(leaderboardId: string, score: number, subscore: number = 0) {
+  /**
+   * Submit a score to a leaderboard.
+   *
+   * Client.writeLeaderboardRecord(session, leaderboardId, request: WriteLeaderboardRecord)
+   * where WriteLeaderboardRecord = { score?: string; subscore?: string; metadata?: object }
+   *
+   * - score/subscore must be passed as strings (client converts back to number on read).
+   * - metadata is a plain object, NOT a JSON string — the client stringifies it internally
+   *   before sending to the server, and parses it back automatically when reading records.
+   */
+  async submitScore(
+    leaderboardId: string,
+    score: number,
+    subscore: number = 0,
+    metadata?: Record<string, any>
+  ) {
     if (!this.session) throw new Error('Not authenticated');
-    
+
     try {
       return await this.client.writeLeaderboardRecord(
         this.session,
         leaderboardId,
-        score,
-        subscore
+        {
+          score: score.toString(),
+          subscore: subscore.toString(),
+          metadata: metadata,
+        }
       );
     } catch (error) {
       console.error('Failed to submit score:', error);
@@ -86,20 +106,25 @@ class NakamaService {
 
   async getUserRank(leaderboardId: string): Promise<{ rank: number; score: number } | null> {
     if (!this.session) throw new Error('Not authenticated');
-    
+    const session = this.session;
+
+    if (!session.user_id) throw new Error('Session is missing user_id');
+
     try {
       const result = await this.client.listLeaderboardRecords(
-        this.session,
+        session,
         leaderboardId,
-        '',
+        [session.user_id],  // ownerIds as string array
         1,
-        [this.session.userId]
+        ''
       );
-      
+
       if (result.records && result.records.length > 0) {
+        // Note: at the Client level (not the raw NakamaApi level), rank/score
+        // are already typed and returned as numbers, not strings.
         return {
-          rank: result.records[0].rank,
-          score: result.records[0].score
+          rank: result.records[0].rank ?? 0,
+          score: result.records[0].score ?? 0
         };
       }
       return null;
@@ -109,17 +134,22 @@ class NakamaService {
     }
   }
 
+  /**
+   * Call a server-side RPC function.
+   *
+   * Client.rpc(session, id, input) accepts a plain object/value for `input` and
+   * JSON.stringify's it internally — do not pre-stringify the payload here.
+   */
   async rpcCall(funcName: string, payload: any) {
     if (!this.session) throw new Error('Not authenticated');
-    
-    const payloadJson = JSON.stringify(payload);
-    const result = await this.client.rpc(this.session, funcName, payloadJson);
-    return result.payload ? JSON.parse(result.payload) : null;
+
+    const result = await this.client.rpc(this.session, funcName, payload);
+    return result.payload ?? null;
   }
 
   getSession(): Session | null {
     if (this.session) return this.session;
-    
+
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('nakama_session');
       if (saved) {

@@ -107,42 +107,41 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   error: null,
 
   // Initialize with user ID
-// store/dashboard.store.ts - Add this to the initialize function
-initialize: async (userId: string) => {
-  set({ loading: true, userId, error: null });
-  
-  try {
-    console.log('🚀 Initializing dashboard for user:', userId);
-    
-    // Connect to Nakama
-    const session = await nakamaAuth.authenticate(userId, `user_${userId.substring(0, 8)}`);
-    
-    // Ensure leaderboards exist
-    await nakamaAuth.ensureLeaderboards();
-    
-    console.log('✅ Nakama authentication successful');
-    
-    // Get user rank
-    const rankInfo = await nakamaAuth.getUserRank('earnings_leaderboard');
-    
-    set({ 
-      isNakamaConnected: true,
-      userRank: rankInfo?.rank || null,
-      loading: false 
-    });
-    
-    // Fetch all dashboard data
-    await get().fetchDashboardData();
-    
-  } catch (error) {
-    console.error('❌ Initialization failed:', error);
-    set({ 
-      error: `Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      loading: false,
-      isNakamaConnected: false
-    });
-  }
-},
+  initialize: async (userId: string) => {
+    set({ loading: true, userId, error: null });
+
+    try {
+      console.log('🚀 Initializing dashboard for user:', userId);
+
+      // Connect to Nakama
+      const session = await nakamaAuth.authenticate(userId, `user_${userId.substring(0, 8)}`);
+
+      // Ensure leaderboards exist
+      await nakamaAuth.ensureLeaderboards();
+
+      console.log('✅ Nakama authentication successful');
+
+      // Get user rank
+      const rankInfo = await nakamaAuth.getUserRank('earnings_leaderboard');
+
+      set({
+        isNakamaConnected: true,
+        userRank: rankInfo?.rank || null,
+        loading: false
+      });
+
+      // Fetch all dashboard data
+      await get().fetchDashboardData();
+
+    } catch (error) {
+      console.error('❌ Initialization failed:', error);
+      set({
+        error: `Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        loading: false,
+        isNakamaConnected: false
+      });
+    }
+  },
 
   // Fetch all dashboard data
   fetchDashboardData: async () => {
@@ -344,10 +343,14 @@ initialize: async (userId: string) => {
 
       if (error) throw error;
 
+      // Note: Supabase infers the `users` join as an array type here
+      // (it can't statically guarantee a single related row), so we
+      // index into it with [0] even though tracks_artist_id_fkey is
+      // a many-to-one relationship that returns one artist per track.
       const tracks: Track[] = tracksData?.map(track => ({
         id: track.id,
         title: track.title,
-        artist: track.users?.artist_name || track.users?.display_name || track.users?.username || 'Unknown Artist',
+        artist: track.users?.[0]?.artist_name || track.users?.[0]?.display_name || track.users?.[0]?.username || 'Unknown Artist',
         album: track.album || 'Single',
         duration: track.duration || '3:00',
         cover: track.cover_url || 'https://via.placeholder.com/200',

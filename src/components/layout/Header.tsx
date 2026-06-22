@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/components/providers/ThemeProvider';
@@ -45,7 +45,7 @@ export const Header = ({
         .select('amount')
         .eq('user_id', user.id);
 
-      const total = data?.reduce((sum, record) => sum + (record.amount || 0), 0) || 0;
+      const total = data?.reduce((sum: number, record: { amount: number | null }) => sum + (record.amount || 0), 0) || 0;
       setPoints(total);
     };
 

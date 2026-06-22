@@ -1,4 +1,4 @@
-﻿// src/services/withdrawal/withdrawal.service.ts
+// src/services/withdrawal/withdrawal.service.ts
 import { supabase } from '@/lib/supabase/client';
 
 export interface WithdrawalRequest {
@@ -77,7 +77,7 @@ class WithdrawalService {
         user_id: userId,
         type: 'withdrawal_request',
         content: {
-          text: `ðŸ’° Withdrawal request of $${amount} submitted. Processing in 1-3 business days.`,
+          text: `💰 Withdrawal request of $${amount} submitted. Processing in 1-3 business days.`,
         },
         created_at: new Date().toISOString(),
       });
@@ -109,10 +109,14 @@ class WithdrawalService {
 
       const { data: rankData } = await supabase
         .from('leaderboard_record')
-        .select('score')
+        // owner_id was missing from the original select — findIndex on r.owner_id
+        // would always return -1 (field undefined), making rank always 0.
+        .select('owner_id, score')
         .order('score', { ascending: false });
 
-      const rank = rankData?.findIndex(r => r.owner_id === userId) + 1 || 0;
+      // rankData?.findIndex(...) returns undefined when rankData is null/undefined,
+      // making undefined + 1 = NaN. ?? -1 gives a safe fallback so not-found → 0.
+      const rank = ((rankData?.findIndex(r => r.owner_id === userId) ?? -1) + 1) || 0;
 
       const { data: weeklyData } = await supabase
         .from('points_history')

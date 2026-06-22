@@ -1,4 +1,4 @@
-﻿// src/components/layout/Sidebar.tsx
+// src/components/layout/Sidebar.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -45,7 +45,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
       setIsLoading(true);
 
-      // Fetch user data
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('username, email, streak')
@@ -58,7 +57,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         return;
       }
 
-      // Fetch total points from wallet_ledger
       const { data: pointsData, error: pointsError } = await supabase
         .from('wallet_ledger')
         .select('amount')
@@ -68,9 +66,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         console.error('Error fetching points:', pointsError);
       }
 
-      const totalPoints = pointsData?.reduce((sum, record) => sum + (record.amount || 0), 0) || 0;
+      const totalPoints = pointsData?.reduce((sum: number, record: { amount: number | null }) => sum + (record.amount || 0), 0) || 0;
 
-      // Calculate tier based on points
       let tier = 'Bronze';
       if (totalPoints >= 10000) tier = 'Platinum';
       else if (totalPoints >= 5000) tier = 'Gold';
@@ -89,7 +86,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
     fetchUserStats();
 
-    // Subscribe to points changes
     const pointsChannel = supabase
       .channel('sidebar-points')
       .on(
@@ -100,13 +96,10 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           table: 'wallet_ledger',
           filter: `user_id=eq.${authUser?.id}`,
         },
-        () => {
-          fetchUserStats();
-        }
+        () => { fetchUserStats(); }
       )
       .subscribe();
 
-    // Subscribe to user updates
     const userChannel = supabase
       .channel('sidebar-user')
       .on(
@@ -117,9 +110,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           table: 'users',
           filter: `id=eq.${authUser?.id}`,
         },
-        () => {
-          fetchUserStats();
-        }
+        () => { fetchUserStats(); }
       )
       .subscribe();
 

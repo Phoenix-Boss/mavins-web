@@ -35,27 +35,22 @@ export async function POST(
 
     // Insert click analytics asynchronously (non-blocking)
     // This is a separate operation from the click count
-    try {
-      // Don't await - fire and forget
-      supabase
-        .from('share_analytics')
-        .insert({
-          share_id: shareId,
-          ip_address: ip,
-          user_agent: userAgent,
-          platform: platform,
-          clicked_at: new Date().toISOString(),
-        })
-        .then(() => {
-          // Analytics inserted successfully
-        })
-        .catch((error) => {
-          console.warn('[Share Track] Analytics insert error (non-critical):', error);
-        });
-    } catch (analyticsError) {
-      // Non-critical - log but don't fail
-      console.warn('[Share Track] Analytics insert error (non-critical):', analyticsError);
-    }
+    (async () => {
+      try {
+        await supabase
+          .from('share_analytics')
+          .insert({
+            share_id: shareId,
+            ip_address: ip,
+            user_agent: userAgent,
+            platform: platform,
+            clicked_at: new Date().toISOString(),
+          });
+        // Analytics inserted successfully
+      } catch (error) {
+        console.warn('[Share Track] Analytics insert error (non-critical):', error);
+      }
+    })();
 
     return NextResponse.json({
       success: true,

@@ -1,4 +1,4 @@
-﻿// src/app/creator/page.tsx
+// src/app/creator/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -24,6 +24,11 @@ export default function CreatorPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { stats, history, requestWithdrawal, refresh } = useWithdrawal();
+
+  // Get task and notification counts
+  const taskCount = 0;
+  const notificationCount = 0;
+  const points = stats?.totalPoints || 0;
 
   const handleWithdraw = async (amount: number, method: 'paypal' | 'bank' | 'crypto', details: any) => {
     setIsSubmitting(true);
@@ -52,15 +57,18 @@ export default function CreatorPage() {
         onMenuClick={() => setIsSidebarOpenState(true)}
         onTaskClick={() => setIsTaskPanelOpen(true)}
         onNotificationClick={() => setIsNotificationPanelOpen(true)}
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
       />
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} userStats={{
-        points: stats?.totalPoints || 0,
-        streak: 0,
-        tier: 'Creator',
-        username: user.email?.split('@')[0],
-        email: user.email,
-      }} />
-      <MobileNav activeTab="creator" />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
+      <MobileNav 
+        activeTab="creator" 
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
+        onTabChange={() => {}}
+      />
 
       <main className="pt-24 pb-8">
         <Container>
@@ -78,13 +86,13 @@ export default function CreatorPage() {
                 withdrawnTotal={stats.withdrawnTotal}
                 rank={stats.rank}
                 totalUsers={stats.totalUsers}
-                weeklyPoints={stats.weeklyPoints}
-                monthlyPoints={stats.monthlyPoints}
+                weeklyPoints={stats.weeklyPoints || 0}
+                monthlyPoints={stats.monthlyPoints || 0}
                 onWithdraw={() => setShowWithdrawModal(true)}
               />
             )}
 
-            <WithdrawalHistory withdrawals={history} />
+            <WithdrawalHistory withdrawals={history || []} />
           </div>
         </Container>
       </main>

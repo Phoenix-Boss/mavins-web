@@ -1,4 +1,4 @@
-﻿// src/app/leaderboard/page.tsx
+// src/app/leaderboard/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -18,6 +18,11 @@ export default function LeaderboardPage() {
   const [isSidebarOpen, setIsSidebarOpenState] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'global' | 'weekly' | 'monthly' | 'tier'>('global');
   const [selectedTier, setSelectedTier] = useState('T4');
+
+  // Get task and notification counts
+  const taskCount = 0;
+  const notificationCount = 0;
+  const points = user?.points || 0;
 
   const mockLeaderboard: LeaderboardEntry[] = [
     { rank: 1, userId: '1', username: 'DJShadow', points: 12450, tier: 'T1' },
@@ -39,9 +44,18 @@ export default function LeaderboardPage() {
         onMenuClick={() => setIsSidebarOpenState(true)}
         onTaskClick={() => setIsTaskPanelOpen(true)}
         onNotificationClick={() => setIsNotificationPanelOpen(true)}
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
       />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
-      <MobileNav activeTab="leaderboard" />
+      <MobileNav
+        activeTab="leaderboard"
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
+        onTabChange={() => {}}
+      />
 
       <main className="pt-24 pb-8">
         <Container>
@@ -50,7 +64,12 @@ export default function LeaderboardPage() {
               <h1 className="text-2xl font-bold">Leaderboard</h1>
               <p className={cn('text-sm mt-1', theme.textSecondary)}>Compete with the community</p>
             </div>
-            <LeaderboardFilters activeFilter={activeFilter} onFilterChange={setActiveFilter} selectedTier={selectedTier} onTierChange={setSelectedTier} />
+            <LeaderboardFilters
+              activeFilter={activeFilter}
+              onFilterChange={setActiveFilter}
+              selectedTier={selectedTier}
+              onTierChange={setSelectedTier}
+            />
             <LeaderboardTable entries={mockLeaderboard} title={getTitle()} />
           </div>
         </Container>

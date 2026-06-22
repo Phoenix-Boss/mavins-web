@@ -120,7 +120,11 @@ export default function HomePage() {
           table: 'pool_mood_state',
           filter: 'pool_id=eq.default'
         },
+<<<<<<< HEAD
         (payload) => {
+=======
+        (payload: { new: { mood_state: string; mood_score: number } }) => {
+>>>>>>> 19e61ac3a4ccfbdd60b5ffa9c4ef589a08b14021
           const newState = payload.new;
           setPoolMood(prev => ({
             ...prev,
@@ -435,7 +439,7 @@ export default function HomePage() {
             <HeroSection
               artistName={featuredArtist.artistName}
               songTitle={featuredArtist.songTitle}
-              albumArt={featuredArtist.albumArt}
+              albumArt={featuredArtist.albumArt || ''}
               playCount={featuredArtist.playCount}
               onPlay={handlePlayFeatured}
               hasWelcomeBonus={isAuthenticated && !hasActivated}
@@ -472,7 +476,7 @@ export default function HomePage() {
                 <Card className="rounded-t-none" padding="none">
                   <ChatList 
                     messages={chatMessages} 
-                    currentUserId={user?.username || user?.email?.split('@')[0]} 
+                    currentUserId={user?.username || user?.email?.split('@')[0] || ''} 
                   />
                   <ChatInput onSendMessage={handleSendMessage} />
                 </Card>

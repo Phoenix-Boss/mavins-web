@@ -22,6 +22,11 @@ export default function ProfilePage() {
   const username = params.username as string;
   const isOwnProfile = user?.email?.split('@')[0] === username;
 
+  // Get task and notification counts
+  const taskCount = 0;
+  const notificationCount = 0;
+  const points = user?.points || 0;
+
   const badges: Badge[] = [
     { id: '1', name: 'Welcome Pioneer', description: 'Played featured artist for first time', icon: '🎉', earnedAt: new Date() },
     { id: '2', name: 'Week Warrior', description: 'Maintained 7 day streak', icon: '🔥' },
@@ -35,9 +40,18 @@ export default function ProfilePage() {
         onMenuClick={() => setIsSidebarOpenState(true)}
         onTaskClick={() => setIsTaskPanelOpen(true)}
         onNotificationClick={() => setIsNotificationPanelOpen(true)}
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
       />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpenState(false)} />
-      <MobileNav activeTab="profile" />
+      <MobileNav
+        activeTab="profile"
+        taskCount={taskCount}
+        notificationCount={notificationCount}
+        points={points}
+        onTabChange={() => {}}
+      />
 
       <main className="pt-24 pb-8">
         <Container>
