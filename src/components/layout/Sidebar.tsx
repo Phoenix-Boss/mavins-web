@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAuth } from '@/hooks/auth/useAuth';
@@ -30,7 +30,7 @@ const navItems = [
 ];
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const { theme } = useTheme();
   const { user: authUser } = useAuth();
   const [userStats, setUserStats] = useState<UserStats | null>(null);

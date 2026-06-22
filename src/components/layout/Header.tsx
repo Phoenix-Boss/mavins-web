@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAppStore } from '@/store/useAppStore';
 import { useAuth } from '@/hooks/auth/useAuth';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 
 interface HeaderProps {
@@ -27,7 +27,7 @@ export const Header = ({
   const { theme, mode, toggleTheme } = useTheme();
   const { user } = useAuth();
   const { setPoints } = useAppStore();
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {

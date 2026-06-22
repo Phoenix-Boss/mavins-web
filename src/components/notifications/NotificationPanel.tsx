@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { cn } from '@/lib/utils/cn';
@@ -33,7 +33,7 @@ export const NotificationPanel = ({
   onMarkAllAsRead 
 }: NotificationPanelProps) => {
   const { theme } = useTheme();
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const { user } = useAuth();
   const [isRefreshing, setIsRefreshing] = useState(false);
 

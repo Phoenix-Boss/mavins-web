@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useAppStore, Task } from '@/store/useAppStore';
 
@@ -34,7 +34,7 @@ interface FeaturedArtist {
 }
 
 export function useDemoData() {
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const { user } = useAuth();
   const {
     tasks,

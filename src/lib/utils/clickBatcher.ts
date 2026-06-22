@@ -1,5 +1,5 @@
 // src/lib/utils/clickBatcher.ts
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 
 interface ClickBatch {
   [shareId: string]: number;
@@ -66,7 +66,7 @@ class ClickBatcher {
 
   // Persist batch to database using bulk update
   private async persistBatch(batch: ClickBatch): Promise<void> {
-    const supabase = createClient();
+    // supabase is already imported from '@/lib/supabase/client'
     
     // Build bulk update queries using CASE statements
     const shareIds = Object.keys(batch);

@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { TaskCard } from './TaskCard';
 import { StreakDisplay } from './StreakDisplay';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { useAppStore } from '@/store/useAppStore';
 import { useTheme } from '@/components/providers/ThemeProvider';
@@ -41,7 +41,7 @@ export const TaskPanel = ({
   onTaskClaim 
 }: TaskPanelProps) => {
   const { theme } = useTheme();
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const { user } = useAuth();
   const { setTasks } = useAppStore();
   const [isRefreshing, setIsRefreshing] = useState(false);

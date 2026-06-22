@@ -1,7 +1,7 @@
 // src/hooks/auth/useAuth.ts
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/Toast';
 import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
@@ -35,7 +35,7 @@ interface UseAuthReturn {
 }
 
 export function useAuth(): UseAuthReturn {
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const { showToast } = useToast();
   const [user, setUserState] = useState<AuthUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);

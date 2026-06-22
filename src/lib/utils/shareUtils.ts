@@ -1,5 +1,5 @@
 // src/lib/utils/shareUtils.ts
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 
 export interface ShareData {
   shareId: string;

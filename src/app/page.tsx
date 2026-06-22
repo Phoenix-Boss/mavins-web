@@ -22,11 +22,11 @@ import { useAuth } from '@/hooks/auth/useAuth';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { cn } from '@/lib/utils/cn';
 import { Card } from '@/components/ui/Card';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 
 export default function HomePage() {
   const { theme } = useTheme();
-  const supabase = createClient();
+  // supabase is already imported from '@/lib/supabase/client'
   const { 
     user, 
     isAuthenticated, 

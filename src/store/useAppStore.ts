@@ -3,7 +3,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 
 // Define Task type based on your actual database schema
 export interface Task {
@@ -121,7 +121,7 @@ export const useAppStore = create<AppState>()(
       
       // Async actions
       fetchUserData: async (userId: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         
         const { data: user, error } = await supabase
           .from('users')
@@ -167,7 +167,7 @@ export const useAppStore = create<AppState>()(
       },
       
       fetchUserTasks: async (userId: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         
         const { data: userTasks, error } = await supabase
           .from('user_tasks')
@@ -216,7 +216,7 @@ export const useAppStore = create<AppState>()(
       },
       
       fetchUserNotifications: async (userId: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         
         const { data: notifications, error } = await supabase
           .from('notification')
@@ -243,7 +243,7 @@ export const useAppStore = create<AppState>()(
       },
       
       fetchChatMessages: async (poolId?: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         
         let query = supabase
           .from('message')
@@ -283,7 +283,7 @@ export const useAppStore = create<AppState>()(
       },
       
       updateTaskProgress: async (taskId: string, progress: number) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         const { tasks } = get();
         const task = tasks.find((t: any) => t.id === taskId);
         
@@ -316,7 +316,7 @@ export const useAppStore = create<AppState>()(
       },
       
       completeTask: async (taskId: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         const { tasks } = get();
         const task = tasks.find((t: any) => t.id === taskId);
         
@@ -345,7 +345,7 @@ export const useAppStore = create<AppState>()(
       },
       
       claimTaskReward: async (taskId: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         const { tasks, user, addPoints } = get();
         const task = tasks.find((t: any) => t.id === taskId);
         
@@ -375,7 +375,7 @@ export const useAppStore = create<AppState>()(
       },
       
       markNotificationAsRead: async (notificationId: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         const { notifications } = get();
         
         const { error } = await supabase
@@ -398,7 +398,7 @@ export const useAppStore = create<AppState>()(
       },
       
       addPoints: async (userId: string, points: number, reason: string) => {
-        const supabase = createClient();
+        // supabase is already imported from '@/lib/supabase/client'
         const { points: currentPoints, user } = get();
         
         const { error: ledgerError } = await supabase

@@ -1,13 +1,13 @@
 // src/app/sitemap.ts
 import { MetadataRoute } from 'next';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 
 // This is optional - you can skip if you don't want share routes in sitemap
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://mavins.vercel.app';
   
   // Fetch all active share IDs (optional - if you want to include them)
-  // const supabase = createClient();
+  // // supabase is already imported from '@/lib/supabase/client'
   // const { data: shares } = await supabase
   //   .from('shares')
   //   .select('share_id, updated_at')
