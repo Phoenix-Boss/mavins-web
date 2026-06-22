@@ -327,7 +327,7 @@ class NakamaService {
       const result = await this.client.listLeaderboardRecords(
         this.session,
         leaderboardId,
-        [this.session.user_id],  // ownerIds as string array
+        [this.session.user_id ?? ''],  // ownerIds — user_id is string|undefined in Session type
         1,
         ''
       );
@@ -350,8 +350,7 @@ class NakamaService {
   async rpcCall(funcName: string, payload: any) {
     if (!this.session) throw new Error('Not authenticated');
 
-    const payloadJson = JSON.stringify(payload);
-    const result = await this.client.rpc(this.session, funcName, payloadJson);
+    const result = await this.client.rpc(this.session, funcName, payload);
     return result.payload ?? null;
   }
 
