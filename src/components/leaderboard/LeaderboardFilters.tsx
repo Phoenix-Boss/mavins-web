@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils/cn';
 
 interface LeaderboardFiltersProps {
   activeFilter: 'global' | 'weekly' | 'monthly' | 'tier';
-  onFilterChange: (filter: string) => void;
+  onFilterChange: (filter: FilterType) => void;
   selectedTier?: string;
   onTierChange?: (tier: string) => void;
 }
@@ -60,6 +60,7 @@ export const LeaderboardFilters = ({ activeFilter, onFilterChange, selectedTier 
     </div>
   );
 };
+
 
 
 

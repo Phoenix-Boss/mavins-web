@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { LeaderboardTable, LeaderboardEntry } from '@/components/leaderboard/LeaderboardTable';
-import { LeaderboardFilters } from '@/components/leaderboard/LeaderboardFilters';
+import { LeaderboardFilters, FilterType } from '@/components/leaderboard/LeaderboardFilters';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAppStore } from '@/store/useAppStore';
 import { cn } from '@/lib/utils/cn';
@@ -77,3 +77,4 @@ export default function LeaderboardPage() {
     </div>
   );
 }
+
