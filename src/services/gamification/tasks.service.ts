@@ -1,4 +1,4 @@
-﻿// src/services/gamification/tasks.service.ts
+// src/services/gamification/tasks.service.ts
 import { supabase } from '@/lib/supabase/client';
 
 export interface DailyTask {
@@ -22,6 +22,30 @@ export interface UserTask {
   task?: DailyTask;
 }
 
+// Maps a raw snake_case Supabase row to the camelCase UserTask interface.
+// All methods that return UserTask rows go through this so the interface
+// is actually satisfied rather than just asserted via `any`.
+function mapToUserTask(row: any): UserTask {
+  return {
+    id: row.id,
+    taskId: row.task_id,
+    progress: row.progress,
+    isCompleted: row.is_completed,
+    isClaimed: row.is_claimed,
+    completedAt: row.completed_at ? new Date(row.completed_at) : undefined,
+    claimedAt: row.claimed_at ? new Date(row.claimed_at) : undefined,
+    task: row.task ? {
+      id: row.task.id,
+      title: row.task.title,
+      description: row.task.description,
+      type: row.task.type,
+      targetId: row.task.target_id,
+      targetCount: row.task.target_count,
+      rewardPoints: row.task.reward_points,
+    } : undefined,
+  };
+}
+
 class TasksService {
   async getDailyTasks(): Promise<DailyTask[]> {
     const { data } = await supabase
@@ -42,11 +66,11 @@ class TasksService {
       .gte('created_at', today);
 
     if (existingTasks && existingTasks.length > 0) {
-      return existingTasks;
+      return existingTasks.map(mapToUserTask);
     }
 
     const dailyTasks = await this.getDailyTasks();
-    const newTasks = [];
+    const newTasks: UserTask[] = [];
 
     for (const task of dailyTasks) {
       const { data: newTask } = await supabase
@@ -62,7 +86,7 @@ class TasksService {
         .select('*, task:daily_tasks(*)')
         .single();
       
-      if (newTask) newTasks.push(newTask);
+      if (newTask) newTasks.push(mapToUserTask(newTask));
     }
 
     return newTasks;
@@ -76,7 +100,7 @@ class TasksService {
       .eq('task_id', taskId)
       .single();
 
-    if (!currentTask || currentTask.is_completed) return currentTask;
+    if (!currentTask || currentTask.is_completed) return currentTask ? mapToUserTask(currentTask) : null;
 
     const newProgress = Math.min(currentTask.progress + increment, currentTask.task.target_count);
     const isCompleted = newProgress >= currentTask.task.target_count;
@@ -96,12 +120,12 @@ class TasksService {
       await supabase.from('notifications').insert({
         user_id: userId,
         type: 'task_completed',
-        content: { text: `âœ… Completed "${currentTask.task.title}"! Claim your ${currentTask.task.rewardPoints} points!` },
+        content: { text: `✅ Completed "${currentTask.task.title}"! Claim your ${currentTask.task.reward_points} points!` },
         created_at: new Date().toISOString(),
       });
     }
 
-    return updatedTask;
+    return updatedTask ? mapToUserTask(updatedTask) : null;
   }
 
   async claimTaskReward(userId: string, taskId: string): Promise<boolean> {
@@ -150,9 +174,9 @@ class TasksService {
 
   async getTodayProgress(userId: string): Promise<{ completed: number; total: number; totalPoints: number }> {
     const tasks = await this.getUserTasks(userId);
-    const completed = tasks.filter(t => t.is_completed && t.is_claimed).length;
+    const completed = tasks.filter(t => t.isCompleted && t.isClaimed).length;
     const total = tasks.length;
-    const totalPoints = tasks.reduce((sum, t) => sum + (t.is_claimed ? (t.task?.reward_points || 0) : 0), 0);
+    const totalPoints = tasks.reduce((sum, t) => sum + (t.isClaimed ? (t.task?.rewardPoints || 0) : 0), 0);
     return { completed, total, totalPoints };
   }
 }
