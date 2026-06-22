@@ -120,8 +120,8 @@ export default function HomePage() {
           table: 'pool_mood_state',
           filter: 'pool_id=eq.default'
         },
-        (payload) => {
-          const newState = payload.new as any;
+        (payload: { new: { mood_state: string; mood_score: number } }) => {
+          const newState = payload.new;
           setPoolMood(prev => ({
             ...prev,
             state: newState.mood_state,
