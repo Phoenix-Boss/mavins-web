@@ -1,43 +1,39 @@
-// src/components/settings/SettingsTabs.tsx
 'use client';
 
-import React from 'react';
 import { cn } from '@/lib/utils/cn';
 
-interface SettingsTabsProps {
-  activeTab: 'profile' | 'notifications' | 'privacy' | 'appearance';
+export type TabType = 'profile' | 'notifications' | 'privacy' | 'appearance';
+
+export interface SettingsTabsProps {
+  activeTab: TabType;
   onTabChange: (tab: TabType) => void;
 }
 
-const tabs = [
-  { id: 'profile', label: 'Profile' },
-  { id: 'notifications', label: 'Notifications' },
-  { id: 'privacy', label: 'Privacy' },
-  { id: 'appearance', label: 'Appearance' }
+const tabs: { id: TabType; label: string; icon: string }[] = [
+  { id: 'profile', label: 'Profile', icon: '??' },
+  { id: 'notifications', label: 'Notifications', icon: '??' },
+  { id: 'privacy', label: 'Privacy', icon: '??' },
+  { id: 'appearance', label: 'Appearance', icon: '??' }
 ];
 
-export const SettingsTabs = ({ activeTab, onTabChange }: SettingsTabsProps) => {
+export function SettingsTabs({ activeTab, onTabChange }: SettingsTabsProps) {
   return (
-    <div className="flex gap-1 p-1 bg-neutral-900/50 rounded-xl w-full overflow-x-auto scrollbar-hide">
+    <div className="flex flex-wrap gap-2 border-b border-zinc-800 pb-4">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            'flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap',
+            'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all',
             activeTab === tab.id
-              ? 'bg-gradient-to-r from-amber-500 to-purple-600 text-white shadow-lg'
-              : 'text-neutral-400 hover:text-white'
+              ? 'bg-amber-500 text-white'
+              : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
           )}
         >
+          <span>{tab.icon}</span>
           {tab.label}
         </button>
       ))}
     </div>
   );
-};
-
-
-
-
-
+}

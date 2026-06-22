@@ -7,7 +7,7 @@ import { Container } from '@/components/ui/Container';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
-import { SettingsTabs } from '@/components/settings/SettingsTabs';
+import { SettingsTabs, TabType } from '@/components/settings/SettingsTabs';
 import { AppearanceSettings } from '@/components/settings/AppearanceSettings';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAppStore } from '@/store/useAppStore';
@@ -132,3 +132,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

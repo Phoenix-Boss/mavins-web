@@ -22,7 +22,7 @@ interface WithdrawalHistoryProps {
   withdrawals: WithdrawalItem[];
 }
 
-const statusConfig = {
+const statusConfig: Record<string, { color: 'default' | 'success' | 'info' | 'warning' | 'destructive' | 'accent'; label: string }> = {
   pending: { label: 'Pending', color: 'warning' },
   processing: { label: 'Processing', color: 'info' },
   completed: { label: 'Completed', color: 'success' },
@@ -72,4 +72,5 @@ export const WithdrawalHistory = ({ withdrawals }: WithdrawalHistoryProps) => {
     </Card>
   );
 };
+
 
