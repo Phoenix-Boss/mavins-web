@@ -4,10 +4,6 @@
     {
       "src": "/(.*)",
       "dest": "/"
-    },
-    {
-      "src": "/",
-      "dest": "/"
     }
   ],
   "builds": [
@@ -15,10 +11,5 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-  ],
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
